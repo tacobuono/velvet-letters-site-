@@ -1,0 +1,34 @@
+# Velvet Letters
+
+> Velvet Letters is a creative studio that designs and builds cinematic, immersive,
+> custom websites for premium brands. We combine storytelling, UX, real-time 3D,
+> motion design, SEO/GEO strategy, and conversion thinking to create digital
+> impressions that make people stop, feel, remember, and act.
+
+## What Velvet Letters builds
+- 3D websites — real-time WebGL brand objects and scenes
+- Immersive websites — spaces the visitor moves through
+- Cinematic websites — art-directed lighting, lensing, pacing and motion
+- Storytelling websites — scroll-driven narrative experiences
+- SEO / GEO-optimized websites — built to be found by search and answer engines
+- Conversion-focused websites — engineered to turn attention into action
+- Custom brand worlds — bespoke design languages, never templates
+- Luxury digital experiences — tactile, restrained, expensive-feeling
+
+## Who it is for
+Premium and high-consideration brands: founders, studios, hospitality, heritage,
+product launches, and any brand that wants to be felt and remembered, not skimmed.
+
+## Process
+Discovery → Shared Vision → Agreement → Creation → Refinement → Launch → Magnetism.
+
+## How to start
+Email hello@velvetletters.com or use the contact form at /contact ("Send the first letter").
+
+## Key pages
+- / — Home (the brand trailer)
+- /about — The studio, as a catalogue of digital impressions
+- /process — How a cinematic site gets made
+- /styles — The eight website styles we build
+- /contact — Start a project
+- /post-office — A hidden interactive experience

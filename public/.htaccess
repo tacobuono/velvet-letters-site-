@@ -1,0 +1,29 @@
+# Velvet Letters SPA — Apache (Hostinger) config
+
+# Client-side routing: serve index.html for any path that isn't a real file/dir,
+# so deep links like /about, /process refresh correctly.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# Correct MIME types (covers the Post Office assets and fonts)
+AddType video/mp4 .mp4
+AddType video/webm .webm
+AddType font/woff2 .woff2
+AddType font/woff .woff
+AddType model/gltf-binary .glb
+
+# Long-cache fingerprinted assets
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType model/gltf-binary "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 6 months"
+</IfModule>
