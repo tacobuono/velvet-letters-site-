@@ -124,6 +124,66 @@ canvas {
   [data-reveal] { opacity: 1 !important; transform: none !important; transition: none; }
 }
 
+/* ============ BRANDED PAGE TRANSITION (velvet curtain + wax seal) ============ */
+/* One motif site-wide. Driven by GSAP from src/layout/PageTransition.tsx. Sits
+   above the nav (z-100) so the cover fully hides Canvas mount/unmount. Idle:
+   hidden + non-interactive so it never blocks clicks. */
+.vt-root {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  visibility: hidden;
+  pointer-events: none;
+}
+.vt-curtain {
+  position: absolute;
+  inset: 0;
+  transform: scaleY(0);
+  transform-origin: 50% 0%;
+  will-change: transform;
+  background:
+    radial-gradient(120% 78% at 50% 0%, rgba(92, 26, 74, 0.55), transparent 62%),
+    linear-gradient(180deg, #3a0a2e 0%, #1a0515 100%);
+}
+/* Velvet drape: soft vertical folds catching a low sheen. */
+.vt-curtain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0,
+    rgba(255, 255, 255, 0.05) 2px,
+    rgba(0, 0, 0, 0.12) 64px,
+    rgba(255, 255, 255, 0.035) 128px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.55;
+}
+/* Warm gold glow pooling toward the seal. */
+.vt-curtain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(78% 50% at 50% 46%, rgba(201, 168, 76, 0.12), transparent 70%);
+}
+.vt-seal {
+  position: relative;
+  z-index: 1;
+  width: clamp(82px, 13vw, 138px);
+  height: clamp(82px, 13vw, 138px);
+  opacity: 0;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.45));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* JS already swaps to a cross-fade; keep folds/sheen calm. */
+  .vt-curtain::before { opacity: 0.4; }
+}
+
 /* ============ HERO SCRIM (home readability) ============ */
 .hero-scrim {
   position: absolute;
