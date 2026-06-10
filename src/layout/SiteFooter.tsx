@@ -58,7 +58,7 @@ export function SiteFooter({ variant = 'velvet' }: Props) {
       </div>
 
       <div className="mx-auto mt-10 max-w-[1600px] border-t border-current/10 pt-6 font-ui text-xs tracking-wider opacity-50">
-        © {2025} Velvet Letters. Cinematic websites for premium brands.
+        © {2025} Velvet Letters Studio. Cinematic websites for premium brands.
       </div>
     </footer>
   );

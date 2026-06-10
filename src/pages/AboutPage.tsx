@@ -52,8 +52,8 @@ export function AboutPage() {
           <span className="italic text-acid-deep">Catalogue</span> of Digital Impressions
         </h1>
         <p className="mt-8 max-w-2xl font-editorial text-2xl leading-relaxed opacity-80" data-reveal>
-          We are a studio for cinematic websites. We do not make ordinary pages. We design digital
-          impressions — felt, remembered, and built to last.
+          We are Velvet Letters Studio, a maker of cinematic websites. We do not make ordinary pages.
+          We design digital impressions — felt, remembered, and built to last.
         </p>
       </header>
 

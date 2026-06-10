@@ -3,7 +3,10 @@ import { useEffect } from 'react';
 // Canonical base. Brand domain is the plural velvetletters.com — confirm DNS/host
 // is configured for this exact host (and www vs apex) before launch.
 export const SITE_URL = 'https://velvetletters.com';
+// Everyday/display name. SITE_LEGAL_NAME is the full name, reserved for formal
+// contexts (structured data legalName, copyright/legal lines).
 export const SITE_NAME = 'Velvet Letters';
+export const SITE_LEGAL_NAME = 'Velvet Letters Studio';
 // Branded 1200x630 OG card. Currently an SVG (generated in-repo, no design tool was
 // available); convert to og-image.jpg/png before launch for Facebook/X scrapers,
 // which don't reliably render SVG. See HIGGSFIELD_ASSETS.md.
@@ -86,6 +89,7 @@ export const organizationLd: JsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
   name: SITE_NAME,
+  legalName: SITE_LEGAL_NAME,
   description:
     'Velvet Letters designs and builds cinematic, immersive, custom websites — 3D, storytelling, SEO/GEO and conversion strategy for premium brands.',
   url: SITE_URL,
