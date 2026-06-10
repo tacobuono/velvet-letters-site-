@@ -58,7 +58,7 @@ export function HeroScene({ reducedMotion }: Props) {
   return (
     <group>
       {/* Hero lighting rig — romantic decay */}
-      <ambientLight color={COLORS.furSage} intensity={0.35} />
+      <ambientLight color={COLORS.furMauve} intensity={0.4} />
       <directionalLight
         color={COLORS.heroKey}
         intensity={1.6}

@@ -41,8 +41,8 @@ type Props = {
 };
 
 const UP = new Vector3(0, 1, 0);
-const FUR_COLORS = [COLORS.furSage, COLORS.furPink, COLORS.furDeep];
-const FUR_WEIGHTS = [0.32, 0.56, 0.12]; // 32 / 56 / 12 distribution
+const FUR_COLORS = [COLORS.furMauve, COLORS.furPink, COLORS.furDeep];
+const FUR_WEIGHTS = [0.3, 0.5, 0.2]; // warm dusty trio (mauve / rose / wine) — no teal
 const ROSE_COLORS = [COLORS.rose, COLORS.roseLight, COLORS.roseDeep];
 const ROSE_WEIGHTS = [0.5, 0.35, 0.15];
 
@@ -73,7 +73,7 @@ export function FurLetter({
   // Cone grows outward from its base (apex +Y); translate so base sits at origin.
   // Finer + 6-sided so dense strands read as plush velvet nap, not cactus spines.
   const furGeo = useMemo(() => {
-    const g = new ConeGeometry(0.02, 0.2, 6);
+    const g = new ConeGeometry(0.028, 0.2, 6);
     g.translate(0, 0.1, 0);
     return g;
   }, []);
@@ -144,8 +144,8 @@ export function FurLetter({
       tiltE.set((rnd() - 0.5) * 1.4, rnd() * Math.PI * 2, (rnd() - 0.5) * 1.4);
       tiltQ.setFromEuler(tiltE);
       dummy.quaternion.copy(q).multiply(tiltQ);
-      const height = 0.55 + rnd() * 1.0; // shorter nap (was 0.7–2.3) so roses read proud
-      const width = 0.7 + rnd() * 0.8; // 0.7–1.5
+      const height = 0.4 + rnd() * 0.6; // 0.4–1.0 — shorter, plusher nap, less spike
+      const width = 0.9 + rnd() * 0.7; // 0.9–1.6 — fatter strands read as velvet, not needles
       dummy.scale.set(width, height, width);
       dummy.updateMatrix();
       fur.setMatrixAt(i, dummy.matrix);

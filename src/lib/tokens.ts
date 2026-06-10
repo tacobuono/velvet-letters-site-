@@ -17,7 +17,7 @@ export const COLORS = {
   sageBg: '#2c4541',
   sageFloor: '#1a2725',
   letterBase: '#3a1818',
-  furSage: '#546f63',
+  furMauve: '#7a4a55',
   furPink: '#c4858a',
   furDeep: '#8a4550',
   rose: '#a55c5c',
