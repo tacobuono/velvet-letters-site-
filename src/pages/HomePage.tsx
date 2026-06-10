@@ -1,6 +1,5 @@
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { PerformanceMonitor } from '@react-three/drei';
 import { ACESFilmicToneMapping, PCFShadowMap } from 'three';
 import { useReducedMotion } from '../lib/useReducedMotion';
 import { useDeviceTier } from '../lib/useDeviceTier';
@@ -51,7 +50,7 @@ function World({ reducedMotion, tier }: { reducedMotion: boolean; tier: DeviceTi
       </SceneGate>
 
       {tier.enablePost && (
-        <Postprocessing enableChromatic={!tier.isMobile} multisampling={tier.isMobile ? 0 : 8} />
+        <Postprocessing enableChromatic={!tier.isMobile} multisampling={tier.isMobile ? 0 : 2} />
       )}
     </>
   );
@@ -60,10 +59,9 @@ function World({ reducedMotion, tier }: { reducedMotion: boolean; tier: DeviceTi
 export function HomePage() {
   const reducedMotion = useReducedMotion();
   const tier = useDeviceTier();
-  // Start at full device pixel ratio (2× on a sharp/retina display) for maximum
-  // crispness — the PerformanceMonitor below only steps it DOWN if the GPU can't
-  // hold frame rate, so capable machines render at native "4K" resolution.
-  const [dpr, setDpr] = useState(tier.dprMax);
+  // DPR is a fixed cap (dpr={[1, tier.dprMax]} on the Canvas). Under frameloop
+  // "demand" there's no PerformanceMonitor ramp — the GPU sleeps at rest instead,
+  // which saves far more than shaving resolution ever did.
 
   // The zoom-parallax only works if the visitor enters at the hero (progress 0).
   // The 600vh+ scroll driver mounts with this lazy chunk — AFTER Lenis init — so a
@@ -91,7 +89,8 @@ export function HomePage() {
     <>
       <div className="fixed inset-0 z-0">
         <Canvas
-          dpr={dpr}
+          frameloop="demand"
+          dpr={[1, tier.dprMax]}
           shadows={{ type: PCFShadowMap }}
           gl={{ antialias: false, powerPreference: 'high-performance' }}
           camera={{ position: [0, 1.2, 16], fov: 40, near: 0.1, far: 1000 }}
@@ -100,16 +99,9 @@ export function HomePage() {
             gl.toneMappingExposure = 1.0;
           }}
         >
-          <PerformanceMonitor
-            flipflops={3}
-            onIncline={() => setDpr((d) => Math.min(tier.dprMax, d + 0.5))}
-            onDecline={() => setDpr((d) => Math.max(1, d - 0.5))}
-            onFallback={() => setDpr(1)}
-          >
-            <Suspense fallback={null}>
-              <World reducedMotion={reducedMotion} tier={tier} />
-            </Suspense>
-          </PerformanceMonitor>
+          <Suspense fallback={null}>
+            <World reducedMotion={reducedMotion} tier={tier} />
+          </Suspense>
         </Canvas>
       </div>
 

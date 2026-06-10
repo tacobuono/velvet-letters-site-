@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
+import { invalidate } from '@react-three/fiber';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { scroll } from './scrollStore';
 import { SECTIONS } from '../data/content';
@@ -34,6 +35,7 @@ export function resetScroll() {
   scroll.velocity = 0;
   if (activeLenis) activeLenis.scrollTo(0, { immediate: true });
   else window.scrollTo(0, 0);
+  invalidate(); // render the reset frame under frameloop="demand"
 }
 
 /**
@@ -55,6 +57,7 @@ export function useLenis(onUpdate?: () => void): React.RefObject<Lenis | null> {
         const max = document.documentElement.scrollHeight - window.innerHeight;
         scroll.progress = max > 0 ? window.scrollY / max : 0;
         scroll.section = Math.round(scroll.progress * (SECTIONS.length - 1));
+        invalidate();
         onUpdate?.();
       };
       update();
@@ -91,6 +94,7 @@ export function useLenis(onUpdate?: () => void): React.RefObject<Lenis | null> {
       scroll.velocity = e.velocity;
       scroll.section = Math.round(scroll.progress * (SECTIONS.length - 1));
       ScrollTrigger.update();
+      invalidate(); // demand-mode: wake the R3F loop for this scroll frame
       onUpdate?.();
     });
 

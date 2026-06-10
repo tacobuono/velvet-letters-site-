@@ -11,34 +11,25 @@ type Props = { reducedMotion: boolean };
  */
 export function Lights({ reducedMotion }: Props) {
   const warm = useRef<PointLight>(null);
-  const cool = useRef<PointLight>(null);
 
-  useFrame((state) => {
+  const animT = useRef(0);
+  useFrame((_, delta) => {
     if (reducedMotion) return;
-    const t = state.clock.elapsedTime;
+    animT.current += Math.min(delta, 0.05);
+    const t = animT.current;
     if (warm.current) {
       warm.current.position.x = 4 + Math.sin(t * 0.4) * 2;
       warm.current.position.y = 3 + Math.cos(t * 0.3) * 1.5;
-    }
-    if (cool.current) {
-      cool.current.position.x = -5 + Math.cos(t * 0.25) * 2;
-      cool.current.position.z = -10 + Math.sin(t * 0.2) * 3;
     }
   });
 
   return (
     <>
-      <ambientLight color={COLORS.velvet} intensity={0.4} />
+      {/* Ambient nudged up (0.4→0.5) to backfill the cinematic split the removed
+          cool point-light used to give — keeps the left/back from going dead-black. */}
+      <ambientLight color={COLORS.velvet} intensity={0.5} />
       <directionalLight color={COLORS.goldLight} intensity={0.5} position={[0, 8, 4]} />
       <pointLight ref={warm} color={COLORS.gold} intensity={40} distance={30} decay={2} position={[4, 3, 2]} />
-      <pointLight
-        ref={cool}
-        color={COLORS.velvetMid}
-        intensity={30}
-        distance={28}
-        decay={2}
-        position={[-5, -2, -10]}
-      />
     </>
   );
 }

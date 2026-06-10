@@ -35,9 +35,11 @@ export function HeroScene({ reducedMotion }: Props) {
     return g;
   }, []);
 
-  useFrame((state) => {
+  const animT = useRef(0);
+  useFrame((_, delta) => {
     if (reducedMotion) return;
-    const t = state.clock.elapsedTime;
+    animT.current += Math.min(delta, 0.05);
+    const t = animT.current;
 
     // Rim light pulses on a ~10s cycle between 1.0 and 1.4 (× candela scale).
     if (rim.current) {
@@ -62,8 +64,8 @@ export function HeroScene({ reducedMotion }: Props) {
         intensity={1.6}
         position={[6, 9, 8]}
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={512}
+        shadow-mapSize-height={512}
         shadow-camera-left={-12}
         shadow-camera-right={12}
         shadow-camera-top={12}
@@ -100,7 +102,7 @@ export function HeroScene({ reducedMotion }: Props) {
         position={[-3.6, 0, 0.5]}
         rotationY={0.12}
         bob={(t) => Math.sin(t * 0.4) * 0.04}
-        decal={{ text: 'VCOOA', seed: 1337, width: 1.7, height: 4.4, offset: [-0.1, 0.15] }}
+        decal={{ text: 'V', seed: 1337, width: 1.7, height: 4.4, offset: [-0.1, 0.15] }}
         reducedMotion={reducedMotion}
       />
       <FurLetter
@@ -108,7 +110,7 @@ export function HeroScene({ reducedMotion }: Props) {
         position={[3.5, 0, -0.3]}
         rotationY={-0.08}
         bob={(t) => Math.cos(t * 0.4) * 0.04}
-        decal={{ text: 'LVOLTCO', seed: 4242, width: 1.3, height: 4.4, offset: [-0.35, 0] }}
+        decal={{ text: 'L', seed: 4242, width: 1.3, height: 4.4, offset: [-0.35, 0] }}
         reducedMotion={reducedMotion}
       />
 

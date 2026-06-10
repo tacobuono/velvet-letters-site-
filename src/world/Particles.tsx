@@ -27,15 +27,16 @@ export function Particles({ count, reducedMotion }: Props) {
     return geo;
   }, [count]);
 
-  useFrame((state, delta) => {
+  const animT = useRef(0);
+  useFrame((_, delta) => {
     const p = ref.current;
     if (!p) return;
     if (!reducedMotion) {
-      p.rotation.y = state.clock.elapsedTime * 0.02;
+      animT.current += Math.min(delta, 0.05);
+      p.rotation.y = animT.current * 0.02;
     }
     // Drift toward the camera as the viewer scrolls deeper, wrapping in place.
     p.position.z = (scroll.progress * 8) % 12;
-    void delta;
   });
 
   return (

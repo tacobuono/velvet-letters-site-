@@ -94,33 +94,39 @@ export function ScrollOverlay({ scrollTo }: Props) {
         {/* Philosophy — pinned left */}
         <div
           data-panel={1}
-          className="absolute inset-y-0 left-0 flex max-w-[640px] flex-col justify-center px-8 sm:px-16"
+          className="absolute inset-y-0 left-0 flex max-w-[680px] flex-col justify-center px-8 sm:px-16"
         >
-          <p className="mb-6 font-ui text-[0.7rem] uppercase tracking-[0.4em] text-gold">{PHILOSOPHY.label}</p>
-          <h2 className="mb-6 font-display text-[clamp(2.2rem,5vw,3.6rem)] font-bold leading-tight text-cream">
-            {PHILOSOPHY.headingLead} <em className="not-italic text-gold">{PHILOSOPHY.headingEm}</em>
-          </h2>
-          <p className="font-editorial text-[1.15rem] font-light leading-[1.9] text-cream/70">{PHILOSOPHY.body}</p>
+          <div className="panel-scrim-left" aria-hidden />
+          <div className="relative">
+            <p className="mb-6 font-ui text-[0.7rem] uppercase tracking-[0.4em] text-gold">{PHILOSOPHY.label}</p>
+            <h2 className="mb-6 font-display text-[clamp(2.2rem,5vw,3.6rem)] font-bold leading-tight text-cream">
+              {PHILOSOPHY.headingLead} <em className="not-italic text-gold">{PHILOSOPHY.headingEm}</em>
+            </h2>
+            <p className="font-editorial text-[1.15rem] font-light leading-[1.9] text-cream/80">{PHILOSOPHY.body}</p>
+          </div>
         </div>
 
         {/* Services — pinned right */}
         <div
           data-panel={2}
-          className="absolute inset-y-0 right-0 flex max-w-[560px] flex-col justify-center px-8 text-right sm:px-16"
+          className="absolute inset-y-0 right-0 flex max-w-[600px] flex-col justify-center px-8 text-right sm:px-16"
         >
-          <p className="mb-6 font-ui text-[0.7rem] uppercase tracking-[0.4em] text-gold">What We Do</p>
-          <h2 className="mb-8 font-display text-[clamp(2.2rem,5vw,3.6rem)] font-bold text-cream">
-            Crafted <em className="italic text-gold">Services</em>
-          </h2>
-          <ul className="flex flex-col gap-4">
-            {SERVICES.map((s) => (
-              <li key={s.number} className="border-r-2 border-gold/30 pr-4">
-                <span className="font-display text-sm text-gold">{s.number}</span>
-                <h3 className="font-display text-lg font-bold text-cream">{s.title}</h3>
-                <p className="font-editorial text-[0.95rem] leading-relaxed text-cream/60">{s.body}</p>
-              </li>
-            ))}
-          </ul>
+          <div className="panel-scrim-right" aria-hidden />
+          <div className="relative">
+            <p className="mb-6 font-ui text-[0.7rem] uppercase tracking-[0.4em] text-gold">What We Do</p>
+            <h2 className="mb-8 font-display text-[clamp(2.2rem,5vw,3.6rem)] font-bold text-cream">
+              Crafted <em className="italic text-gold">Services</em>
+            </h2>
+            <ul className="flex flex-col gap-4">
+              {SERVICES.map((s) => (
+                <li key={s.number} className="border-r-2 border-gold/30 pr-4">
+                  <span className="font-display text-sm text-gold">{s.number}</span>
+                  <h3 className="font-display text-lg font-bold text-cream">{s.title}</h3>
+                  <p className="font-editorial text-[0.95rem] leading-relaxed text-cream/70">{s.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* Process — pinned center bottom */}

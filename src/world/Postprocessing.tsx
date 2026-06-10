@@ -20,15 +20,16 @@ export function Postprocessing({ enableChromatic, multisampling = 4 }: Props) {
   // The effect stores this Vector2 by reference in its shader uniform, so mutating
   // it in place each frame drives the aberration live — no ref needed (passing a
   // ref to the wrapped effect makes the composer choke serializing the fiber tree).
-  const offset = useMemo(() => new Vector2(0.0006, 0.0006), []);
-  const current = useRef(0.0006);
+  const offset = useMemo(() => new Vector2(0, 0), []);
+  const current = useRef(0);
 
-  // Velocity-reactive chromatic aberration: still at rest, smearing toward the
-  // colour fringes on fast scroll. Damped so it eases rather than flickering.
+  // Velocity-reactive chromatic aberration, deliberately a WHISPER. Razor-sharp at
+  // rest (true 0); only a faint colour fringe creeps in on fast scroll, then eases
+  // straight back. The old max (0.0032, maxing out on normal scroll) read as a
+  // broken-monitor RGB split — never acceptable on a premium frame.
   useFrame((_, delta) => {
-    const v = Math.min(Math.abs(scroll.velocity), 40);
-    // 0 at rest → razor-sharp static frames; fringes in only during fast scroll.
-    const target = MathUtils.mapLinear(v, 0, 40, 0.0, 0.0032);
+    const v = Math.min(Math.abs(scroll.velocity), 60);
+    const target = MathUtils.mapLinear(v, 0, 60, 0.0, 0.0007);
     current.current = MathUtils.damp(current.current, target, 6, Math.min(delta, 0.05));
     offset.set(current.current, current.current);
   });

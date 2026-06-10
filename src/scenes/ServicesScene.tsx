@@ -32,7 +32,7 @@ export function ServicesScene({ reducedMotion }: Props) {
   useFrame((state, delta) => {
     const g = group.current;
     if (!g) return;
-    if (!reducedMotion) g.rotation.y += delta * 0.12;
+    if (!reducedMotion) g.rotation.y += Math.min(delta, 0.05) * 0.12;
 
     // Brighten the face most directly pointing at the camera.
     for (let i = 0; i < faces.length; i++) {

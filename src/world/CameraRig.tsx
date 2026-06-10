@@ -12,7 +12,7 @@ type Props = { reducedMotion: boolean };
  * and look-at toward the eased target. Never snaps.
  */
 export function CameraRig({ reducedMotion }: Props) {
-  const { camera } = useThree();
+  const { camera, invalidate } = useThree();
   const targetPos = useMemo(() => new Vector3(), []);
   const lookAt = useMemo(() => new Vector3(), []);
   const currentLook = useRef(new Vector3().copy(LOOK_TARGETS[0]));
@@ -36,6 +36,7 @@ export function CameraRig({ reducedMotion }: Props) {
       }
       currentLook.current.lerp(LOOK_TARGETS[section], 0.1);
       camera.lookAt(currentLook.current);
+      if (currentLook.current.distanceToSquared(LOOK_TARGETS[section]) > 1e-6) invalidate();
       return;
     }
 
@@ -60,6 +61,13 @@ export function CameraRig({ reducedMotion }: Props) {
     currentLook.current.y = MathUtils.damp(currentLook.current.y, lookAt.y, lambda, dt);
     currentLook.current.z = MathUtils.damp(currentLook.current.z, lookAt.z, lambda, dt);
     camera.lookAt(currentLook.current);
+
+    // Demand-mode settle tail: keep requesting frames until the dolly has eased
+    // onto its target, then stop — so the GPU sleeps the instant motion is done.
+    const settled =
+      camera.position.distanceToSquared(targetPos) < 1e-6 &&
+      currentLook.current.distanceToSquared(lookAt) < 1e-6;
+    if (!settled) invalidate();
   });
 
   return null;

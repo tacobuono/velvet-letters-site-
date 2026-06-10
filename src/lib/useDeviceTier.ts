@@ -12,7 +12,7 @@ export type DeviceTier = {
 
 function detect(): DeviceTier {
   if (typeof window === 'undefined') {
-    return { isMobile: false, enablePost: true, particleCount: 600, dprMax: 2 };
+    return { isMobile: false, enablePost: true, particleCount: 600, dprMax: 1.75 };
   }
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
   // Coarse low-power heuristic: few logical cores often signals a weaker GPU.
@@ -23,7 +23,7 @@ function detect(): DeviceTier {
     isMobile,
     enablePost: !weak,
     particleCount: weak ? 200 : 600,
-    dprMax: isMobile ? 1 : 2,
+    dprMax: isMobile ? 1 : 1.75,
   };
 }
 

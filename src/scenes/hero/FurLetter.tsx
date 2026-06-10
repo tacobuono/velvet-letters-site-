@@ -61,7 +61,7 @@ export function FurLetter({
   rotationY,
   bob,
   decal,
-  furCount = 8000,
+  furCount = 3000,
   roseCount = 90,
   reducedMotion,
 }: Props) {
@@ -183,9 +183,13 @@ export function FurLetter({
     roses.computeBoundingSphere();
   }, [geometry, furCount, roseCount, decal.seed]);
 
-  useFrame((state) => {
+  // Accumulated clamped time (not clock.elapsedTime) so under frameloop="demand"
+  // the bob pauses while the loop sleeps and resumes smoothly — no jump on wake.
+  const animT = useRef(0);
+  useFrame((_, delta) => {
     if (reducedMotion || !group.current) return;
-    group.current.position.y = baseY + bob(state.clock.elapsedTime);
+    animT.current += Math.min(delta, 0.05);
+    group.current.position.y = baseY + bob(animT.current);
   });
 
   return (
@@ -195,20 +199,21 @@ export function FurLetter({
         <meshStandardMaterial color={COLORS.letterBase} roughness={0.85} metalness={0.05} envMapIntensity={0.4} />
       </mesh>
 
-      {/* Fur */}
+      {/* Fur — deliberately NOT shadow-casting/receiving. Rendering 8000 instances
+          per letter into the directional shadow map every frame was the single
+          biggest hero cost, and fur self-shadow reads as mush. The base skin +
+          roses + contact shadow carry the grounding instead. */}
       <instancedMesh
         ref={furRef}
         args={[furGeo, furMat, furCount]}
-        castShadow
-        receiveShadow
         frustumCulled={false}
       />
 
-      {/* Dried roses */}
+      {/* Dried roses — no shadow casting; 180 instanced GLB roses contribute almost
+          nothing to the shadow map but cost a full extra instanced shadow pass. */}
       <instancedMesh
         ref={roseRef}
         args={[roseGeo, roseMat, roseCount]}
-        castShadow
         frustumCulled={false}
       />
 
