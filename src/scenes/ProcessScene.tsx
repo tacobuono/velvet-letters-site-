@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { MeshReflectorMaterial, Text } from '@react-three/drei';
-import { COLORS, FONT_FILES } from '../lib/tokens';
+import { MeshReflectorMaterial } from '@react-three/drei';
+import { COLORS } from '../lib/tokens';
 import { PROCESS } from '../data/content';
 
 type Props = { reducedMotion: boolean };
@@ -57,29 +57,9 @@ export function ProcessScene({ reducedMotion }: Props) {
             />
           </mesh>
 
-          {/* Roman numeral floating above */}
-          <Text
-            font={FONT_FILES.displayBlack}
-            position={[0, 3.4, 0]}
-            fontSize={0.9}
-            color={COLORS.goldBright}
-            anchorX="center"
-            anchorY="middle"
-          >
-            {step.numeral}
-          </Text>
-
-          {/* Step title */}
-          <Text
-            font={FONT_FILES.displayBold}
-            position={[0, 2.5, 0]}
-            fontSize={0.42}
-            color={COLORS.cream}
-            anchorX="center"
-            anchorY="middle"
-          >
-            {step.title}
-          </Text>
+          {/* No floating 3D text — the DOM Process column owns the numerals, titles
+              and copy (one source, no collision with the overlay). The obelisks read
+              as sculptural gold-inlay pillars. */}
         </group>
       ))}
     </group>

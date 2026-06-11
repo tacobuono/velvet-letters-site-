@@ -7,8 +7,11 @@ import { SERVICES } from '../data/content';
 
 type Props = { reducedMotion: boolean };
 
-const CENTER = new Vector3(0, 0, -22);
-const RADIUS = 2.4;
+// Offset left of the camera's look axis (which stays at x=0) so the prism sits on
+// the left/centre and the right-pinned DOM service list gets a clean column — an
+// intentional editorial split instead of 3D text colliding with the copy.
+const CENTER = new Vector3(-2.7, 0, -22);
+const RADIUS = 1.9;
 const FACE_COUNT = 6;
 
 export function ServicesScene({ reducedMotion }: Props) {
@@ -42,7 +45,7 @@ export function ServicesScene({ reducedMotion }: Props) {
       faceNormal.set(Math.sin(worldAngle), 0, Math.cos(worldAngle));
       camDir.copy(state.camera.position).sub(CENTER).normalize();
       const facing = Math.max(0, faceNormal.dot(camDir));
-      mat.emissiveIntensity = 0.1 + facing * facing * 0.9;
+      mat.emissiveIntensity = 0.08 + facing * facing * 0.5;
     }
   });
 
@@ -50,41 +53,35 @@ export function ServicesScene({ reducedMotion }: Props) {
     <group ref={group} position={CENTER}>
       {faces.map(({ service, angle, position }, i) => (
         <group key={service.number} position={position} rotation={[0, angle, 0]}>
-          <mesh castShadow>
-            <boxGeometry args={[2.5, 5, 0.18]} />
+          <mesh>
+            <boxGeometry args={[2.1, 4.4, 0.16]} />
             <meshStandardMaterial
               ref={(m) => {
                 mats.current[i] = m;
               }}
               color={COLORS.velvetMid}
               emissive={COLORS.gold}
-              emissiveIntensity={0.1}
+              emissiveIntensity={0.08}
               roughness={0.45}
               metalness={0.45}
               envMapIntensity={1.1}
             />
           </mesh>
+          {/* Each face carries only its numeral — a large ivory wayfinder with a fine
+              dark outline so it stays crisp on the gold at any rotation. The service
+              titles live in the DOM list (one source of truth, no colliding double-text). */}
           <Text
             font={FONT_FILES.displayBlack}
-            position={[0, 1.4, 0.12]}
-            fontSize={0.9}
-            color={COLORS.gold}
+            position={[0, 0, 0.12]}
+            fontSize={1.25}
+            color={COLORS.creamWarm}
             anchorX="center"
             anchorY="middle"
+            outlineWidth={0.012}
+            outlineColor={COLORS.velvetDeep}
+            outlineOpacity={0.55}
           >
             {service.number}
-          </Text>
-          <Text
-            font={FONT_FILES.ui}
-            position={[0, 0.2, 0.12]}
-            fontSize={0.3}
-            maxWidth={2.1}
-            textAlign="center"
-            color={COLORS.cream}
-            anchorX="center"
-            anchorY="middle"
-          >
-            {service.title}
           </Text>
         </group>
       ))}

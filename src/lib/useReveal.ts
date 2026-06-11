@@ -25,7 +25,9 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>() {
           }
         }
       },
-      { threshold: 0.18, rootMargin: '0px 0px -8% 0px' },
+      // Fire as soon as the element edges into view (~80% down the viewport), not
+      // after it's 18% up — so reveals finish before the reader reaches the content.
+      { threshold: 0.01, rootMargin: '0px 0px -2% 0px' },
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();

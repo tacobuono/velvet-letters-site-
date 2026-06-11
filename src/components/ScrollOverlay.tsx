@@ -109,15 +109,15 @@ export function ScrollOverlay({ scrollTo }: Props) {
         {/* Services — pinned right */}
         <div
           data-panel={2}
-          className="absolute inset-y-0 right-0 flex max-w-[600px] flex-col justify-center px-8 text-right sm:px-16"
+          className="absolute inset-y-0 right-0 flex max-w-[460px] flex-col justify-center px-8 text-right sm:px-12"
         >
           <div className="panel-scrim-right" aria-hidden />
           <div className="relative">
-            <p className="mb-6 font-ui text-[0.7rem] uppercase tracking-[0.4em] text-gold">What We Do</p>
-            <h2 className="mb-8 font-display text-[clamp(2.2rem,5vw,3.6rem)] font-bold text-cream">
+            <p className="mb-5 font-ui text-[0.7rem] uppercase tracking-[0.4em] text-gold">What We Do</p>
+            <h2 className="mb-7 font-display text-[clamp(2rem,4.5vw,3.2rem)] font-bold text-cream">
               Crafted <em className="italic text-gold">Services</em>
             </h2>
-            <ul className="flex flex-col gap-4">
+            <ul className="flex flex-col gap-3">
               {SERVICES.map((s) => (
                 <li key={s.number} className="border-r-2 border-gold/30 pr-4">
                   <span className="font-display text-sm text-gold">{s.number}</span>
@@ -143,7 +143,7 @@ export function ScrollOverlay({ scrollTo }: Props) {
               <div key={step.numeral}>
                 <div className="mb-1 font-display text-sm font-bold text-gold">{step.numeral}</div>
                 <h3 className="mb-1 font-display text-base font-bold text-cream">{step.title}</h3>
-                <p className="font-editorial text-[0.9rem] leading-relaxed text-cream/60">{step.body}</p>
+                <p className="font-editorial text-[0.9rem] leading-relaxed text-cream/80">{step.body}</p>
               </div>
             ))}
           </div>
@@ -154,7 +154,7 @@ export function ScrollOverlay({ scrollTo }: Props) {
           data-panel={4}
           className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
         >
-          <p className="mx-auto max-w-[800px] font-editorial text-[clamp(1.5rem,3vw,2.5rem)] font-light italic leading-[1.7] text-cream">
+          <p className="mx-auto max-w-[800px] font-editorial text-[clamp(1.5rem,3vw,2.5rem)] font-normal italic leading-[1.7] text-cream drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
             {MANIFESTO.quote}
           </p>
           <p className="mt-6 font-ui text-[0.8rem] uppercase tracking-[0.3em] text-gold">{MANIFESTO.attribution}</p>
@@ -165,18 +165,21 @@ export function ScrollOverlay({ scrollTo }: Props) {
           data-panel={5}
           className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
         >
-          <h2 className="mb-6 font-display text-[clamp(2.5rem,6vw,5rem)] font-black leading-[1.1] text-cream">
-            {CTA.headingLead}
-            <br />
-            <em className="italic text-gold">{CTA.headingEm}</em>
-          </h2>
-          <p className="mb-10 font-editorial text-[1.2rem] font-light text-cream/60">{CTA.sub}</p>
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="pointer-events-auto bg-gold px-16 py-5 font-ui text-[0.8rem] font-medium uppercase tracking-[0.3em] text-velvet-deep no-underline transition-transform hover:-translate-y-0.5"
-          >
-            {CTA.button}
-          </a>
+          <div className="cta-scrim" aria-hidden />
+          <div className="relative flex flex-col items-center">
+            <h2 className="mb-6 font-display text-[clamp(2.5rem,6vw,5rem)] font-black leading-[1.1] text-cream">
+              {CTA.headingLead}{' '}
+              <br />
+              <em className="italic text-gold">{CTA.headingEm}</em>
+            </h2>
+            <p className="mb-10 font-editorial text-[1.2rem] font-light text-cream/80">{CTA.sub}</p>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="pointer-events-auto bg-gold px-16 py-5 font-ui text-[0.8rem] font-medium uppercase tracking-[0.3em] text-velvet-deep no-underline transition-transform hover:-translate-y-0.5"
+            >
+              {CTA.button}
+            </a>
+          </div>
           <div className="pointer-events-auto absolute inset-x-0 bottom-0 w-full">
             <Footer />
           </div>

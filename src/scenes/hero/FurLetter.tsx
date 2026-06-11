@@ -61,7 +61,7 @@ export function FurLetter({
   rotationY,
   bob,
   decal,
-  furCount = 3000,
+  furCount = 0, // fur removed — clean V/L letterforms, no spikes
   roseCount = 90,
   reducedMotion,
 }: Props) {

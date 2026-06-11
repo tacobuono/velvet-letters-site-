@@ -11,9 +11,9 @@ const SEAL = [0, 0, -58] as const;
 export function CTAScene({ reducedMotion }: Props) {
   const wax = useRef<MeshPhysicalMaterial>(null);
 
-  // Blender assets: beaded gold ring + bevelled extruded "VL" emboss.
+  // Beaded gold ring. (The "VL" emboss was removed — it crested the seal exactly
+  // where the centred CTA headline sits, poking through the type.)
   const filigreeGeo = useGltfGeometry(MODELS.filigree);
-  const markGeo = useGltfGeometry(MODELS.vlMark);
 
   useFrame((state) => {
     if (reducedMotion || !wax.current) return;
@@ -63,27 +63,6 @@ export function CTAScene({ reducedMotion }: Props) {
         />
       </mesh>
 
-      {/* Gold VL monogram cresting the wax — bevelled extruded serif (GLB),
-          stood upright (rotation X) so the letterfaces face the camera rather
-          than their extrusion edges. Polished gold to read against the wax. */}
-      <mesh
-        geometry={markGeo}
-        position={[0, 0.82, 0.25]}
-        rotation={[Math.PI / 2, 0, 0]}
-        scale={[1.5, 1.5, 0.7]}
-        castShadow
-      >
-        <meshPhysicalMaterial
-          color={COLORS.gold}
-          emissive={COLORS.gold}
-          emissiveIntensity={0.12}
-          roughness={0.26}
-          metalness={1}
-          clearcoat={0.55}
-          clearcoatRoughness={0.25}
-          envMapIntensity={1.4}
-        />
-      </mesh>
     </group>
   );
 }

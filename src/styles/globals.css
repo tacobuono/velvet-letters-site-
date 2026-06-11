@@ -110,9 +110,11 @@ canvas {
 
 /* ============ SCROLL REVEAL ============ */
 [data-reveal] {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Start half-visible (not invisible) so a fast scroll never catches content as a
+     gray ghost — the reveal reads as emphasis, not gatekeeping. */
+  opacity: 0.5;
+  transform: translateY(16px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 [data-reveal].is-in {
   opacity: 1;
@@ -207,6 +209,15 @@ canvas {
   inset: 0;
   pointer-events: none;
   background: linear-gradient(270deg, rgba(13, 6, 11, 0.82) 0%, rgba(13, 6, 11, 0.62) 38%, rgba(13, 6, 11, 0.22) 72%, transparent 100%);
+}
+
+/* CTA: dims the gold wax seal hard behind the centred headline so the text always
+   lands on quiet dark ground, while the seal's outer ring still glints at the edges. */
+.cta-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 50% 50% at 50% 46%, rgba(13, 6, 11, 0.92) 0%, rgba(13, 6, 11, 0.7) 48%, transparent 78%);
 }
 
 /* ============ ABOUT — paper / catalogue ============ */
