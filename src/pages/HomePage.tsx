@@ -12,13 +12,7 @@ import { Fog } from '../world/Fog';
 import { Particles } from '../world/Particles';
 import { Postprocessing } from '../world/Postprocessing';
 import { StudioEnvironment } from '../world/StudioEnvironment';
-import { SceneGate } from '../world/SceneGate';
-import { HeroScene } from '../scenes/HeroScene';
-import { PhilosophyScene } from '../scenes/PhilosophyScene';
-import { ServicesScene } from '../scenes/ServicesScene';
-import { ProcessScene } from '../scenes/ProcessScene';
-import { TestimonialScene } from '../scenes/TestimonialScene';
-import { CTAScene } from '../scenes/CTAScene';
+import { SiteArtboardScene } from '../scenes/SiteArtboardScene';
 import { ScrollOverlay } from '../components/ScrollOverlay';
 
 function World({ reducedMotion, tier }: { reducedMotion: boolean; tier: DeviceTier }) {
@@ -30,24 +24,9 @@ function World({ reducedMotion, tier }: { reducedMotion: boolean; tier: DeviceTi
       <Particles count={tier.particleCount} reducedMotion={reducedMotion} />
       <CameraRig reducedMotion={reducedMotion} />
 
-      <SceneGate index={0}>
-        <HeroScene reducedMotion={reducedMotion} />
-      </SceneGate>
-      <SceneGate index={1}>
-        <PhilosophyScene reducedMotion={reducedMotion} />
-      </SceneGate>
-      <SceneGate index={2}>
-        <ServicesScene reducedMotion={reducedMotion} />
-      </SceneGate>
-      <SceneGate index={3}>
-        <ProcessScene reducedMotion={reducedMotion} />
-      </SceneGate>
-      <SceneGate index={4}>
-        <TestimonialScene reducedMotion={reducedMotion} />
-      </SceneGate>
-      <SceneGate index={5}>
-        <CTAScene reducedMotion={reducedMotion} />
-      </SceneGate>
+      {/* One persistent scene: the fictional client site assembling on its
+          artboard. No SceneGate cross-fades — the camera path IS the edit. */}
+      <SiteArtboardScene reducedMotion={reducedMotion} />
 
       {tier.enablePost && (
         <Postprocessing enableChromatic={!tier.isMobile} multisampling={tier.isMobile ? 0 : 2} />
@@ -97,6 +76,9 @@ export function HomePage() {
           onCreated={({ gl }) => {
             gl.toneMapping = ACESFilmicToneMapping;
             gl.toneMappingExposure = 1.0;
+            // Beat 5 scrolls the fictional page inside its artboard frame via
+            // world-space clipping planes on the page materials.
+            gl.localClippingEnabled = true;
           }}
         >
           <Suspense fallback={null}>

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { scroll } from '../lib/scrollStore';
 import { SECTIONS } from '../data/content';
 import { HERO, PHILOSOPHY, SERVICES, PROCESS, MANIFESTO, CTA } from '../data/content';
@@ -24,6 +24,8 @@ const FADE = 0.2;
  */
 export function ScrollOverlay({ scrollTo }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const dived = useRef(false);
 
   useEffect(() => {
     const overlay = overlayRef.current;
@@ -40,6 +42,15 @@ export function ScrollOverlay({ scrollTo }: Props) {
         el.style.opacity = String(opacity);
         el.style.transform = `translateY(${(pos - i) * 24}px)`;
         el.style.visibility = opacity < 0.02 ? 'hidden' : 'visible';
+      }
+
+      // The dive (beat 6): an intentional push past the end of the journey —
+      // still actively scrolling at the very bottom — steps through the closing
+      // photograph into /about via the velvet curtain. Resting at the CTA never
+      // triggers it, so the buttons stay clickable.
+      if (!dived.current && scroll.progress > 0.995 && scroll.velocity > 0.12) {
+        dived.current = true;
+        navigate('/about');
       }
       raf = requestAnimationFrame(tick);
     };
@@ -64,20 +75,20 @@ export function ScrollOverlay({ scrollTo }: Props) {
             headline stays instantly readable over the 3D letters. */}
         <div
           data-panel={0}
-          className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
+          className="absolute inset-0 flex flex-col items-start justify-end px-6 pb-[12vh] text-left sm:pl-[6vw]"
         >
           <div className="hero-scrim" aria-hidden />
           <p className="relative mb-6 font-ui text-[0.8rem] font-light uppercase tracking-[0.45em] text-gold">
             {HERO.eyebrow}
           </p>
-          <h1 className="relative mx-auto max-w-[16ch] font-display text-[clamp(2.4rem,6.5vw,5.6rem)] font-black leading-[0.98] text-cream drop-shadow-[0_2px_30px_rgba(0,0,0,0.75)]">
+          <h1 className="relative max-w-[16ch] font-display text-[clamp(2.4rem,6.5vw,5.6rem)] font-black leading-[0.98] text-cream drop-shadow-[0_2px_30px_rgba(0,0,0,0.75)]">
             {HERO.h1Lead}{' '}
             <span className="italic font-normal text-gold">{HERO.h1Em}</span>
           </h1>
-          <p className="relative mx-auto mt-7 max-w-[560px] font-editorial text-[clamp(1.1rem,2vw,1.5rem)] font-light leading-relaxed text-gold-light">
+          <p className="relative mt-7 max-w-[560px] font-editorial text-[clamp(1.1rem,2vw,1.5rem)] font-light leading-relaxed text-gold-light">
             {HERO.sub}
           </p>
-          <div className="relative mt-10 flex flex-wrap items-center justify-center gap-4">
+          <div className="relative mt-10 flex flex-wrap items-center justify-start gap-4">
             <Link
               to="/contact"
               className="pointer-events-auto rounded-full bg-gold px-10 py-4 font-ui text-[0.8rem] uppercase tracking-[0.28em] text-velvet-deep no-underline transition-transform hover:-translate-y-0.5"

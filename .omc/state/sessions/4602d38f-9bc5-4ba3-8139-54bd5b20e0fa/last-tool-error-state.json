@@ -1,0 +1,7 @@
+{
+  "tool_name": "mcp__plugin_playwright_playwright__browser_take_screenshot",
+  "tool_input_preview": "{\"type\":\"jpeg\",\"filename\":\"b1-open.jpeg\"}",
+  "error": "### Error\nError: browserBackend.callTool: Target page, context or browser has been closed",
+  "timestamp": "2026-06-11T05:30:20.810Z",
+  "retry_count": 1
+}

@@ -1,6 +1,6 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
-import { MathUtils, Vector3 } from 'three';
+import { MathUtils, PerspectiveCamera, Vector3 } from 'three';
 import { cameraCurve, getLookTarget, easeSegmented, WAYPOINTS, LOOK_TARGETS } from '../lib/cameraPath';
 import { scroll } from '../lib/scrollStore';
 
@@ -62,11 +62,21 @@ export function CameraRig({ reducedMotion }: Props) {
     currentLook.current.z = MathUtils.damp(currentLook.current.z, lookAt.z, lambda, dt);
     camera.lookAt(currentLook.current);
 
+    // The dive (beat 6): widen the FOV over the final stretch so pushing into
+    // the closing photograph feels like stepping through it, not just nearing it.
+    const cam = camera as PerspectiveCamera;
+    const targetFov = 40 + 14 * MathUtils.smoothstep(t, 0.86, 1);
+    if (Math.abs(cam.fov - targetFov) > 0.01) {
+      cam.fov = MathUtils.damp(cam.fov, targetFov, lambda, dt);
+      cam.updateProjectionMatrix();
+    }
+
     // Demand-mode settle tail: keep requesting frames until the dolly has eased
     // onto its target, then stop — so the GPU sleeps the instant motion is done.
     const settled =
       camera.position.distanceToSquared(targetPos) < 1e-6 &&
-      currentLook.current.distanceToSquared(lookAt) < 1e-6;
+      currentLook.current.distanceToSquared(lookAt) < 1e-6 &&
+      Math.abs(cam.fov - targetFov) <= 0.01;
     if (!settled) invalidate();
   });
 

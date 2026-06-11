@@ -1,28 +1,28 @@
 import { CatmullRomCurve3, Vector3 } from 'three';
 
-// Six waypoints — one per scene. Scroll progress (0..1) maps to position on the
-// curve. The path is deliberately AXIAL: x stays 0 and y barely moves, so the
-// camera dollies straight down -Z through centered scenes (a calm forward reveal)
-// rather than swooping in diagonal/orbital arcs. Every scene anchor sits on the
-// centre axis so this works (see *Scene.tsx CENTER/HALL/SEAL constants).
+// Six waypoints — one per beat of the "site within the site" journey. The
+// fictional client artboard sits at the origin (y 0.2); the camera circles and
+// pushes in around it: wide open shot, over-the-shoulder push, left drift,
+// square-on settle, locked while the page scrolls itself, then the dive
+// straight into the closing photograph (the doorway to /about).
 export const WAYPOINTS = [
-  new Vector3(0, 1.2, 16), // Hero: VL monogram at origin
-  new Vector3(0, 0.6, 4), // Philosophy: entering the corridor
-  new Vector3(0, 0.6, -8), // Services: hexagon dead ahead (distance ~14)
-  new Vector3(0, 0.4, -24), // Process: walking the obelisks
-  new Vector3(0, 1.2, -42), // Testimonial: the lit hall
-  new Vector3(0, 0.4, -52), // CTA: the wax seal (distance ~6)
+  new Vector3(0, 0.9, 11), // B1: wide — blank artboard in the studio dark
+  new Vector3(-2.6, 0.6, 8.2), // B2: drift left → board sits right, clear of the left copy
+  new Vector3(2.6, 0.4, 8.0), // B3: cross right → board sits left, clear of the right copy
+  new Vector3(0, 0.5, 7.6), // B4: settle square-on for the cascade
+  new Vector3(0, 0.2, 7.8), // B5: locked, full page in frame as it scrolls itself
+  new Vector3(0, 0.2, 1.15), // B6: dive into the closing photograph
 ];
 
-// Look-at targets — also axial (x = 0), each well ahead of its camera so the
-// gaze stays forward down the corridor.
+// Look-at targets — offsetting the gaze pushes the board to the opposite side
+// of the frame, keeping a clean column for that beat's DOM copy panel.
 export const LOOK_TARGETS = [
   new Vector3(0, 0.3, 0),
-  new Vector3(0, 0, -10),
-  new Vector3(0, 0, -22),
-  new Vector3(0, 0, -34),
-  new Vector3(0, 0.6, -50),
-  new Vector3(0, 0, -58),
+  new Vector3(-1.1, 0.4, 0), // board right (Philosophy copy pinned left)
+  new Vector3(1.15, 0.1, 0), // board left (Services copy pinned right)
+  new Vector3(0, 0.55, 0), // board drops low (Process copy along the bottom)
+  new Vector3(0, 0.2, 0),
+  new Vector3(0, 0.2, -1.5),
 ];
 
 // Tension 0.3 (was 0.5) softens direction changes at waypoints so the camera
