@@ -14,8 +14,11 @@ export const COLORS = {
   charcoal: '#1a1a1a',
 
   // hero scene — romantic decay (VL-monogram-study reference)
-  sageBg: '#2c4541',
-  sageFloor: '#1a2725',
+  // NOTE: "sage" names are historical — the hero world was warmed from teal/sage
+  // into the plum family so the whole site shares one palette (gold/plum/cream).
+  // Still lighter than velvetDeep, preserving the bright-open → dark-dive arc.
+  sageBg: '#31182a',
+  sageFloor: '#241019',
   letterBase: '#3a1818',
   furMauve: '#7a4a55',
   furPink: '#c4858a',
@@ -26,7 +29,7 @@ export const COLORS = {
   panelBg: '#d4c5a8',
   panelInk: '#9c3322',
   heroKey: '#fff5dc',
-  heroFill: '#5a8a99',
+  heroFill: '#9a6a7e', // dusty mauve fill (was teal #5a8a99) — cool-vs-warm split stays inside the warm family
   heroRim: '#c4858a',
 } as const;
 

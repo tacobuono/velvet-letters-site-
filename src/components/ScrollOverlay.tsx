@@ -4,11 +4,18 @@ import { scroll } from '../lib/scrollStore';
 import { SECTIONS } from '../data/content';
 import { HERO, PHILOSOPHY, SERVICES, PROCESS, MANIFESTO, CTA } from '../data/content';
 import { CONTACT_EMAIL } from '../lib/tokens';
-import { Footer } from './Footer';
+import { SiteFooter } from '../layout/SiteFooter';
 
 type Props = { scrollTo: (id: string) => void };
 
-const FADE_WINDOW = 0.62; // how many section-widths of scroll a panel stays visible
+// Panel cross-fade shape (in section-widths). HOLD is a full-opacity plateau —
+// copy reads at 100% for the whole middle of its section, not only at the exact
+// centre. Beyond it, a smoothstep fade reaches 0 by half a section, so adjacent
+// panels NEVER overlap: hand-offs are a brief dip to dark (a film cut), not a
+// double-exposure of two ghost texts. (The old linear `1 - d/0.62` ramp capped
+// most reading at ~60% opacity and held two panels at 19% through transitions.)
+const HOLD = 0.3;
+const FADE = 0.2;
 
 /**
  * Fixed, cross-fading DOM copy — one panel per scene, positioned per the brief.
@@ -28,7 +35,8 @@ export function ScrollOverlay({ scrollTo }: Props) {
       for (const el of panels) {
         const i = Number(el.dataset.panel);
         const dist = Math.abs(pos - i);
-        const opacity = Math.max(0, 1 - dist / FADE_WINDOW);
+        const t = Math.min(Math.max((dist - HOLD) / FADE, 0), 1);
+        const opacity = 1 - t * t * (3 - 2 * t); // smoothstep: plateau, then clean falloff
         el.style.opacity = String(opacity);
         el.style.transform = `translateY(${(pos - i) * 24}px)`;
         el.style.visibility = opacity < 0.02 ? 'hidden' : 'visible';
@@ -109,7 +117,7 @@ export function ScrollOverlay({ scrollTo }: Props) {
         {/* Services — pinned right */}
         <div
           data-panel={2}
-          className="absolute inset-y-0 right-0 flex max-w-[460px] flex-col justify-center px-8 text-right sm:px-12"
+          className="absolute inset-y-0 right-0 flex max-w-[480px] flex-col justify-center pl-8 pr-8 text-left sm:pl-10 sm:pr-20"
         >
           <div className="panel-scrim-right" aria-hidden />
           <div className="relative">
@@ -119,10 +127,10 @@ export function ScrollOverlay({ scrollTo }: Props) {
             </h2>
             <ul className="flex flex-col gap-3">
               {SERVICES.map((s) => (
-                <li key={s.number} className="border-r-2 border-gold/30 pr-4">
-                  <span className="font-display text-sm text-gold">{s.number}</span>
+                <li key={s.number} className="grid grid-cols-[1fr_auto] gap-x-4 border-l-2 border-gold/30 pl-4">
                   <h3 className="font-display text-lg font-bold text-cream">{s.title}</h3>
-                  <p className="font-editorial text-[0.95rem] leading-relaxed text-cream/70">{s.body}</p>
+                  <span className="font-display text-sm text-gold">{s.number}</span>
+                  <p className="col-span-2 font-editorial text-[0.95rem] leading-relaxed text-cream/70">{s.body}</p>
                 </li>
               ))}
             </ul>
@@ -163,7 +171,7 @@ export function ScrollOverlay({ scrollTo }: Props) {
         {/* CTA — centered, with footer */}
         <div
           data-panel={5}
-          className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
+          className="absolute inset-0 flex flex-col items-center justify-center px-6 pb-[40vh] text-center"
         >
           <div className="cta-scrim" aria-hidden />
           <div className="relative flex flex-col items-center">
@@ -180,8 +188,8 @@ export function ScrollOverlay({ scrollTo }: Props) {
               {CTA.button}
             </a>
           </div>
-          <div className="pointer-events-auto absolute inset-x-0 bottom-0 w-full">
-            <Footer />
+          <div className="pointer-events-auto absolute inset-x-0 bottom-0 w-full text-left">
+            <SiteFooter />
           </div>
         </div>
       </div>
