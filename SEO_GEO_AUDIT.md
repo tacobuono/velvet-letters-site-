@@ -38,11 +38,17 @@ Status after the multi-page build. Canonical host assumed: **https://velvetlette
 - All claims map to visible content — no hidden or fabricated markup, no fake reviews/ratings.
 
 ## Remaining recommendations (next pass)
-1. **OG image**: add a real `public/og-image.jpg` (1200×630). Referenced now but the file is a TODO.
+1. ✅ **OG image** — real `public/og-image.png` (1200×630) now ships, rasterized from
+   `og-image.svg` with the brand fonts via `node scripts/build-og-image.mjs`. Static
+   `og:image` / `twitter:image` + dimensions are baked into `index.html` (so non-JS
+   scrapers see the card), and `useSeo` still injects per-route overrides.
 2. **Prerender/SSG for crawlers**: this is a client-rendered SPA. Titles/meta/JSON-LD are injected client-side — modern Google executes JS, but for maximal coverage (and non-JS answer engines) add static prerendering (e.g. `vite-plugin-prerender`/`react-snap`) so each route ships static HTML with its meta + copy baked in.
 3. **Per-route OG images** for richer social cards.
-4. **Code-split the R3F/three bundle** off the non-Home routes (currently ~482 KB gzip loads app-wide) → faster LCP/TBT on About/Contact/etc.
-5. **Confirm canonical host** (velvetletters.com vs www) and update `SITE_URL`, sitemap, robots, .htaccess accordingly. Add HTTPS + www→apex (or apex→www) redirect in `.htaccess`.
+4. ✅ **Code-split the R3F/three bundle** — `HomePage` (and the game route) are
+   `React.lazy`; content routes (About/Process/Styles/Contact) no longer pull three.js.
+5. ✅ **Canonical host confirmed**: apex `https://velvetletters.com` (no www), consistent
+   across `SITE_URL`, `sitemap.xml`, `robots.txt`. `.htaccess` now 301-redirects
+   `http→https` and `www→apex` so only the one origin is ever served/indexed.
 6. **Analytics** + Search Console + Bing Webmaster verification.
 7. Expand FAQ coverage (cinematic definition, who it's for, SEO/GEO scope) as visible content, then extend FAQPage.
 
@@ -53,8 +59,12 @@ Status after the multi-page build. Canonical host assumed: **https://velvetlette
 
 ## Accessibility risks / status
 - Semantic headings, labelled form fields, keyboard-operable nav + mobile menu, focus-visible defaults, reduced-motion handling across page transition, reveals, and 3D.
+- Skip-to-content link + programmatic focus handoff on route change (screen-reader page-change announcement).
 - Post Office game is canvas-only by nature → the reward + next step (CTA) are duplicated in accessible DOM below it, and instructions are provided as text; a keyboard-playable version is a future enhancement.
-- Verify color contrast on gold-on-velvet small text (eyebrows) meets AA; darken or enlarge if needed.
+- ✅ Gold-on-velvet contrast verified (live-measured). Full `gold` on `velvet-deep` is
+  ~8.5:1. Reduced-opacity small labels that failed AA were bumped: Styles `gold/60`
+  → `gold/80` (3.67 → 5.75:1); Process caption `gold/70` → `gold/85` (6.37:1); the
+  large Process numeral `gold/40` → `gold/60` (3.67:1, clears the 3:1 large-text bar).
 
 ## Content gaps (next pass)
 - Real testimonials/case studies (would unlock `CreativeWork`/`Review` schema — only with genuine, visible content).

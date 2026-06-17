@@ -108,5 +108,10 @@ for the numerals / quote glyph / seal. These are the three asset swaps listed ab
 ## Notes
 
 - CTA email is `hello@velvetletters.com` (from the existing site, direct mailto, no
-  Cloudflare obfuscation). A link-building CSV in the parent folder references
-  `velvetletters.com` (plural) — confirm which domain is canonical before launch.
+  Cloudflare obfuscation).
+- **Canonical host locked to apex `https://velvetletters.com`** (no www) across
+  `src/lib/seo.ts`, `sitemap.xml`, `robots.txt`, and a `.htaccess` 301 redirect
+  (`http→https`, `www→apex`). Point DNS/hosting at that exact origin before launch.
+- **OG card**: `public/og-image.png` (1200×630) is generated from `og-image.svg`
+  with the brand fonts — regenerate with `node scripts/build-og-image.mjs` after
+  editing the SVG.

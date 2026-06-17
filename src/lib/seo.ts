@@ -7,10 +7,10 @@ export const SITE_URL = 'https://velvetletters.com';
 // contexts (structured data legalName, copyright/legal lines).
 export const SITE_NAME = 'Velvet Letters';
 export const SITE_LEGAL_NAME = 'Velvet Letters Studio';
-// Branded 1200x630 OG card. Currently an SVG (generated in-repo, no design tool was
-// available); convert to og-image.jpg/png before launch for Facebook/X scrapers,
-// which don't reliably render SVG. See HIGGSFIELD_ASSETS.md.
-export const OG_IMAGE = `${SITE_URL}/og-image.svg`;
+// Branded 1200x630 OG card. Real PNG raster (Facebook/X/LinkedIn don't reliably
+// render SVG og:image). Rendered from og-image.svg with the brand fonts via
+// `node scripts/build-og-image.mjs`. Absolute URL — scrapers require it.
+export const OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 type JsonLd = Record<string, unknown>;
 

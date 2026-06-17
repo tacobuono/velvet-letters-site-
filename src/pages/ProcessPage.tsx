@@ -117,7 +117,7 @@ export function ProcessPage() {
           <div className="monitor">
             <StageScreen stage={active} />
             <div className="monitor-stand" aria-hidden />
-            <p className="mt-4 text-center font-ui text-[0.7rem] uppercase tracking-[0.3em] text-gold/70">
+            <p className="mt-4 text-center font-ui text-[0.7rem] uppercase tracking-[0.3em] text-gold/85">
               Stage {STAGES[active].n} — {STAGES[active].title}
             </p>
           </div>
@@ -135,7 +135,7 @@ export function ProcessPage() {
                 active === i ? 'border-gold' : 'border-gold/15'
               }`}
             >
-              <span className="font-display text-5xl font-black text-gold/40">{s.n}</span>
+              <span className="font-display text-5xl font-black text-gold/60">{s.n}</span>
               <h2 className="mt-3 font-display text-[clamp(2rem,4vw,3.4rem)] font-bold">{s.title}</h2>
               <p className="mt-4 max-w-md font-editorial text-xl leading-relaxed text-cream/80">{s.lead}</p>
               <p className="mt-4 max-w-md font-ui text-[0.8rem] uppercase tracking-[0.18em] text-gold">

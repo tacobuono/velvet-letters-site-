@@ -9,7 +9,33 @@
       content="Velvet Letters builds cinematic, immersive, custom websites for premium brands — 3D, storytelling, SEO/GEO and conversion strategy."
     />
     <meta name="theme-color" content="#1a0515" />
+    <link rel="canonical" href="https://velvetletters.com/" />
     <title>Velvet Letters — Cinematic Websites for Premium Brands</title>
+
+    <!-- Static social-card tags. Most scrapers (Facebook, LinkedIn, iMessage,
+         Slack) don't run JS, so they only ever see this head — the per-route
+         useSeo() injection below is invisible to them. Keep these absolute and
+         in sync with src/lib/seo.ts (SITE_URL, OG_IMAGE). -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Velvet Letters" />
+    <meta property="og:url" content="https://velvetletters.com/" />
+    <meta property="og:title" content="Velvet Letters — Cinematic Websites for Premium Brands" />
+    <meta
+      property="og:description"
+      content="Velvet Letters builds cinematic, immersive, custom websites for premium brands — 3D, storytelling, SEO/GEO and conversion strategy."
+    />
+    <meta property="og:image" content="https://velvetletters.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Velvet Letters — cinematic websites people feel and remember." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Velvet Letters — Cinematic Websites for Premium Brands" />
+    <meta
+      name="twitter:description"
+      content="Velvet Letters builds cinematic, immersive, custom websites for premium brands — 3D, storytelling, SEO/GEO and conversion strategy."
+    />
+    <meta name="twitter:image" content="https://velvetletters.com/og-image.png" />
+    <meta name="twitter:image:alt" content="Velvet Letters — cinematic websites people feel and remember." />
   </head>
   <body>
     <div id="root"></div>

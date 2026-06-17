@@ -85,7 +85,7 @@ export function StylesPage() {
 
             {/* Wall label */}
             <div>
-              <span className="font-ui text-[0.7rem] uppercase tracking-[0.35em] text-gold/60">
+              <span className="font-ui text-[0.7rem] uppercase tracking-[0.35em] text-gold/80">
                 World {String(i + 1).padStart(2, '0')}
               </span>
               <h2 className="mt-2 font-display text-[clamp(2rem,4vw,3.4rem)] font-bold leading-tight">{s.title}</h2>
@@ -93,15 +93,15 @@ export function StylesPage() {
 
               <dl className="mt-6 grid gap-4 sm:grid-cols-3">
                 <div>
-                  <dt className="font-ui text-[0.62rem] uppercase tracking-[0.2em] text-gold/60">Feels like</dt>
+                  <dt className="font-ui text-[0.62rem] uppercase tracking-[0.2em] text-gold/80">Feels like</dt>
                   <dd className="mt-1 font-editorial text-base text-cream/75">{s.feel}</dd>
                 </div>
                 <div>
-                  <dt className="font-ui text-[0.62rem] uppercase tracking-[0.2em] text-gold/60">Best for</dt>
+                  <dt className="font-ui text-[0.62rem] uppercase tracking-[0.2em] text-gold/80">Best for</dt>
                   <dd className="mt-1 font-editorial text-base text-cream/75">{s.fit}</dd>
                 </div>
                 <div>
-                  <dt className="font-ui text-[0.62rem] uppercase tracking-[0.2em] text-gold/60">Outcome</dt>
+                  <dt className="font-ui text-[0.62rem] uppercase tracking-[0.2em] text-gold/80">Outcome</dt>
                   <dd className="mt-1 font-editorial text-base text-cream/75">{s.outcome}</dd>
                 </div>
               </dl>
