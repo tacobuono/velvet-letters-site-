@@ -4,23 +4,16 @@ This build uses procedural primitives as stand-ins per the brief's "build with
 primitives, note them here" instruction. Everything below works today; these are
 upgrades to swap real assets in later.
 
-## ✅ Asset pass — real GLBs now shipping (Blender 5.1, `blender/build_assets.py`)
+## Retired: the procedural-hero GLB pass (Blender)
 
-Generated headless and committed to `public/models/` (regenerate any time with
-`"<blender>" --background --python blender/build_assets.py`):
-- **`rose.glb`** — sculptural layered-petal rose (phyllotaxis spiral, curled/cupped
-  petals, organic variation, solidified, smooth-shaded). Now the **instanced rose
-  geometry** in the hero (replaced the displaced-icosahedron blob). Velvet/satin
-  `MeshPhysicalMaterial` with sheen, per-instance tint, oriented to face outward.
-- **`vl-mark.glb`** — bevelled extruded serif "VL" (Georgia). Now the **gold
-  monogram** cresting the CTA wax seal (replaced flat drei `<Text>`).
-- **`filigree.glb`** — beaded double-hairline gold ring. Now the **CTA frame**
-  (replaced the plain torus). CTA camera waypoint pulled back (-28 → -24) to frame it.
-
-Remaining true-asset upgrades (need a human 3D artist / scan — see below): a real
-shells-and-fins **fur shader** (hero strands are still instanced cones), **scanned
-roses** for even more fidelity, hand-painted **decal textures**, and `Text3D` for
-the Process numerals / Testimonial quote glyph.
+An earlier hero used Blender-generated props (`rose.glb`, `vl-mark.glb`,
+`filigree.glb`) under `public/models/`, built by `blender/build_assets.py`. The
+homepage was then rebuilt as the photoreal "site within the site" journey
+(`src/scenes/SiteArtboardScene.tsx`) — a fictional client site assembling from
+real **photographic textures on planes**, which is cheaper on the GPU and
+demand-mode safe. Those GLBs became orphaned (no `useGLTF` anywhere) and were
+removed along with the generator script. If a future scene needs them again,
+recover from git history (`git log -- public/models`).
 
 ## Assets to provide (drop into `public/`)
 

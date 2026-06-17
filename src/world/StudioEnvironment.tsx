@@ -4,11 +4,12 @@ import { COLORS } from '../lib/tokens';
 /**
  * Procedural image-based lighting — a small studio of soft area lights baked
  * once into an environment map (no external HDRI file, so it ships static and
- * offline-clean). This is what makes the gold, wax and filigree read as real
- * metal: MeshStandard/Physical materials sample this map for reflections.
+ * offline-clean). This is what makes the artboard's gold hairline frame read as
+ * real metal: its MeshStandard material samples this map for reflections.
  *
  * background={false} so it only affects reflections/IBL — the scroll-driven
- * sage→velvet Fog still owns the visible backdrop.
+ * sage→velvet Fog still owns the visible backdrop. Baked once (frames={1}); no
+ * per-frame cost under the demand render loop.
  */
 export function StudioEnvironment() {
   return (

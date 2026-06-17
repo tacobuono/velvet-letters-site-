@@ -25,7 +25,6 @@ AddType video/mp4 .mp4
 AddType video/webm .webm
 AddType font/woff2 .woff2
 AddType font/woff .woff
-AddType model/gltf-binary .glb
 
 # Long-cache fingerprinted assets
 <IfModule mod_expires.c>
@@ -33,7 +32,6 @@ AddType model/gltf-binary .glb
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
   ExpiresByType font/woff2 "access plus 1 year"
-  ExpiresByType model/gltf-binary "access plus 1 year"
   ExpiresByType image/jpeg "access plus 6 months"
   ExpiresByType image/png "access plus 6 months"
   ExpiresByType image/svg+xml "access plus 6 months"
