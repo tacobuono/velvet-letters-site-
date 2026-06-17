@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSeo, webPageLd, breadcrumbLd } from '../lib/seo';
+import { usePauseOffscreen } from '../lib/usePauseOffscreen';
 import { CTASection } from '../layout/CTASection';
 import { SiteFooter } from '../layout/SiteFooter';
 
@@ -74,6 +75,8 @@ export function ProcessPage() {
     ],
   });
 
+  usePauseOffscreen(); // pause the looping "crowd" animation when off-screen
+
   const [active, setActive] = useState(0);
   const stageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -142,7 +145,7 @@ export function ProcessPage() {
                 → {s.outcome}
               </p>
               {i === STAGES.length - 1 && (
-                <div className="crowd mt-8" aria-hidden>
+                <div className="crowd mt-8" data-anim-pause aria-hidden>
                   {Array.from({ length: 9 }).map((_, k) => (
                     <span key={k} style={{ animationDelay: `${k * 0.12}s` }} />
                   ))}

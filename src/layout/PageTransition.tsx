@@ -70,9 +70,15 @@ export const PageTransition = forwardRef<PageTransitionHandle>(function PageTran
           onCovered();
         };
         const finish = () => {
+          // Release the GPU layers the moment the curtain is done compositing.
+          gsap.set([curtain, seal], { willChange: 'auto' });
           tlRef.current = null;
           onDone?.();
         };
+
+        // Promote curtain + seal to their own layers only for the duration of
+        // this run (the matching CSS will-change was removed so idle has none).
+        gsap.set([curtain, seal], { willChange: 'transform, opacity' });
 
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

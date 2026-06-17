@@ -1,5 +1,5 @@
 import { useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { Text, useTexture } from '@react-three/drei';
 import {
   Group,
@@ -84,6 +84,7 @@ const PHOTO_URLS = [
  * cheap on the GPU, scroll-driven, demand-mode safe.
  */
 export function SiteArtboardScene({ reducedMotion }: Props) {
+  const { invalidate } = useThree();
   const textures = useTexture(PHOTO_URLS) as Texture[];
   useMemo(() => {
     for (const t of textures) t.colorSpace = SRGBColorSpace;
@@ -150,6 +151,13 @@ export function SiteArtboardScene({ reducedMotion }: Props) {
         blink * (1 - win(p, 0.08, 0.12));
       cursorRef.current.visible = p < 0.12;
     }
+
+    // The scene runs under frameloop="demand" and otherwise sleeps at rest. While
+    // the visitor is still parked on the blank artboard (before any scroll), keep
+    // requesting frames so the cursor actually blinks and the gold dust keeps
+    // drifting — the "waiting to be composed" beat. The instant they scroll past
+    // it, this stops and the GPU sleeps between scroll-driven frames again.
+    if (!reducedMotion && p < 0.12) invalidate();
   });
 
   return (

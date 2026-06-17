@@ -32,25 +32,34 @@ export function ScrollOverlay({ scrollTo }: Props) {
     if (!overlay) return;
     const panels = Array.from(overlay.querySelectorAll<HTMLElement>('[data-panel]'));
     let raf = 0;
+    // Dirty-check: the canvas behind us runs frameloop="demand" and sleeps at
+    // rest, so the overlay should too. Skip the per-panel style writes on frames
+    // where scroll hasn't moved — the loop keeps spinning but does ~no work idle.
+    let lastProgress = -1;
     const tick = () => {
-      const pos = scroll.progress * (SECTIONS.length - 1);
-      for (const el of panels) {
-        const i = Number(el.dataset.panel);
-        const dist = Math.abs(pos - i);
-        const t = Math.min(Math.max((dist - HOLD) / FADE, 0), 1);
-        const opacity = 1 - t * t * (3 - 2 * t); // smoothstep: plateau, then clean falloff
-        el.style.opacity = String(opacity);
-        el.style.transform = `translateY(${(pos - i) * 24}px)`;
-        el.style.visibility = opacity < 0.02 ? 'hidden' : 'visible';
-      }
+      const progress = scroll.progress;
+      if (progress !== lastProgress) {
+        lastProgress = progress;
+        const pos = progress * (SECTIONS.length - 1);
+        for (const el of panels) {
+          const i = Number(el.dataset.panel);
+          const dist = Math.abs(pos - i);
+          const t = Math.min(Math.max((dist - HOLD) / FADE, 0), 1);
+          const opacity = 1 - t * t * (3 - 2 * t); // smoothstep: plateau, then clean falloff
+          el.style.opacity = String(opacity);
+          el.style.transform = `translateY(${(pos - i) * 24}px)`;
+          el.style.visibility = opacity < 0.02 ? 'hidden' : 'visible';
+        }
 
-      // The dive (beat 6): an intentional push past the end of the journey —
-      // still actively scrolling at the very bottom — steps through the closing
-      // photograph into /about via the velvet curtain. Resting at the CTA never
-      // triggers it, so the buttons stay clickable.
-      if (!dived.current && scroll.progress > 0.995 && scroll.velocity > 0.12) {
-        dived.current = true;
-        navigate('/about');
+        // The dive (beat 6): an intentional push past the end of the journey —
+        // still actively scrolling at the very bottom — steps through the closing
+        // photograph into /about via the velvet curtain. Resting at the CTA never
+        // triggers it, so the buttons stay clickable. (Velocity>0 implies progress
+        // is changing, so this can only fire inside the dirty branch.)
+        if (!dived.current && progress > 0.995 && scroll.velocity > 0.12) {
+          dived.current = true;
+          navigate('/about');
+        }
       }
       raf = requestAnimationFrame(tick);
     };

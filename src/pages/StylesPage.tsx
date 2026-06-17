@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useSeo, webPageLd, breadcrumbLd } from '../lib/seo';
 import { useReveal } from '../lib/useReveal';
+import { usePauseOffscreen } from '../lib/usePauseOffscreen';
 import { CTASection } from '../layout/CTASection';
 import { SiteFooter } from '../layout/SiteFooter';
 
@@ -26,7 +27,7 @@ const STYLES: Style[] = [
 
 function StyleScene({ k }: { k: string }) {
   return (
-    <div className={`style-scene scene-${k}`} aria-hidden>
+    <div className={`style-scene scene-${k}`} data-anim-pause aria-hidden>
       {k === '3d' && <div className="s3d-cube"><span /><span /><span /><span /><span /><span /></div>}
       {k === 'immersive' && <div className="s-imm"><i /><i /><i /><i /></div>}
       {k === 'effective' && <div className="s-eff"><i /><i /><i /><b /></div>}
@@ -52,6 +53,7 @@ export function StylesPage() {
   });
 
   const ref = useReveal<HTMLDivElement>();
+  usePauseOffscreen(); // pause the looping exhibit animations when off-screen
 
   return (
     <div ref={ref} className="bg-velvet-deep text-cream">
@@ -71,7 +73,7 @@ export function StylesPage() {
         {STYLES.map((s, i) => (
           <article
             key={s.key}
-            data-reveal
+            data-reveal={i % 2 === 1 ? 'right' : 'left'}
             className={`mx-auto grid max-w-[1500px] items-center gap-10 border-b border-gold/12 px-6 py-16 sm:px-10 lg:grid-cols-2 ${
               i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''
             }`}

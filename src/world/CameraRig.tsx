@@ -28,15 +28,21 @@ export function CameraRig({ reducedMotion }: Props) {
   useFrame((_, delta) => {
     if (reducedMotion) {
       // Fade between discrete static shots: jump position to the active section's
-      // waypoint, then gently damp the look-at for a soft settle.
+      // waypoint, then gently damp the look-at for a soft settle. Frame-rate
+      // independent (damp, not a fixed per-frame lerp) so the settle reads the
+      // same on 60Hz and 120Hz.
       const section = scroll.section;
       if (frozenSection.current !== section) {
         frozenSection.current = section;
         camera.position.copy(WAYPOINTS[section]);
       }
-      currentLook.current.lerp(LOOK_TARGETS[section], 0.1);
+      const dt = Math.min(delta, 0.05);
+      const target = LOOK_TARGETS[section];
+      currentLook.current.x = MathUtils.damp(currentLook.current.x, target.x, 3, dt);
+      currentLook.current.y = MathUtils.damp(currentLook.current.y, target.y, 3, dt);
+      currentLook.current.z = MathUtils.damp(currentLook.current.z, target.z, 3, dt);
       camera.lookAt(currentLook.current);
-      if (currentLook.current.distanceToSquared(LOOK_TARGETS[section]) > 1e-6) invalidate();
+      if (currentLook.current.distanceToSquared(target) > 1e-6) invalidate();
       return;
     }
 

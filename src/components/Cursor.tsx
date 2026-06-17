@@ -9,11 +9,26 @@ export function Cursor() {
     const el = ref.current;
     if (!el) return;
     el.style.opacity = '1';
+    // Coalesce: mousemove can fire faster than the display refreshes. Stash the
+    // latest position and write the transform once per frame so we never queue
+    // redundant style writes ahead of paint.
+    let raf = 0;
+    let x = 0;
+    let y = 0;
+    const apply = () => {
+      raf = 0;
+      el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    };
     const move = (e: MouseEvent) => {
-      el.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+      x = e.clientX;
+      y = e.clientY;
+      if (!raf) raf = requestAnimationFrame(apply);
     };
     window.addEventListener('mousemove', move);
-    return () => window.removeEventListener('mousemove', move);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   return (

@@ -14,6 +14,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Motion tokens — the brand's easing + interaction timings in one place, so CSS
+   animations/transitions never hardcode a repeated cubic-bezier. (Runtime-3D and
+   GSAP timings live as named constants in their components: PageTransition,
+   useScrollProgress, CameraRig.) */
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 160ms;
+  --duration-normal: 400ms;
+  --duration-slow: 550ms;
+}
+
 html {
   overflow-x: hidden;
 }
@@ -59,7 +70,7 @@ canvas {
   font-weight: 600;
   text-decoration: none;
   border-radius: 0 0 0.4rem 0;
-  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-fast) var(--ease-out-expo);
 }
 .skip-link:focus-visible {
   transform: translateY(0);
@@ -103,7 +114,7 @@ main:focus {
   height: 1px;
   width: 0;
   background: #c9a84c;
-  transition: width 0.4s ease;
+  transition: width var(--duration-normal) ease;
 }
 .nav-link:hover::after {
   width: 100%;
@@ -152,7 +163,7 @@ main:focus {
   to { opacity: 1; }
 }
 .page-enter {
-  animation: pageEnter 0.5s ease both;
+  animation: pageEnter var(--duration-slow) ease both;
 }
 
 /* ============ SCROLL REVEAL ============ */
@@ -161,11 +172,16 @@ main:focus {
      gray ghost — the reveal reads as emphasis, not gatekeeping. */
   opacity: 0.5;
   transform: translateY(16px);
-  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity var(--duration-slow) var(--ease-out-expo), transform var(--duration-slow) var(--ease-out-expo);
 }
+/* Directional variants: content can enter from the side it visually sits on
+   (e.g. alternating showroom exhibits), so reveals are choreographed by position
+   instead of every element rising the same 16px. */
+[data-reveal='left'] { transform: translateX(-28px); }
+[data-reveal='right'] { transform: translateX(28px); }
 [data-reveal].is-in {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -191,7 +207,8 @@ main:focus {
   inset: 0;
   transform: scaleY(0);
   transform-origin: 50% 0%;
-  will-change: transform;
+  /* will-change is applied by GSAP only while a transition runs, then cleared —
+     the overlay is hidden ~99% of the time, so a permanent GPU layer is waste. */
   background:
     radial-gradient(120% 78% at 50% 0%, rgba(92, 26, 74, 0.55), transparent 62%),
     linear-gradient(180deg, #3a0a2e 0%, #1a0515 100%);
@@ -224,7 +241,7 @@ main:focus {
   width: clamp(82px, 13vw, 138px);
   height: clamp(82px, 13vw, 138px);
   opacity: 0;
-  will-change: transform, opacity;
+  /* will-change set/cleared by GSAP around the transition (see .vt-curtain). */
   filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.45));
 }
 
@@ -460,6 +477,19 @@ main:focus {
 @keyframes crowdStep {
   0%, 100% { transform: translateY(0); opacity: 0.5; }
   50% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* Off-screen animation pause (see usePauseOffscreen). Elements tagged
+   data-anim-pause keep their descendant keyframes paused until they scroll into
+   view, so the looping showroom/crowd animations don't composite off-screen. */
+/* !important is deliberate: the per-scene `animation:` shorthand rules below are
+   defined later at equal specificity and would otherwise reset play-state to
+   running. (Reduced-motion still wins — it sets animation-name: none.) */
+[data-anim-pause] * {
+  animation-play-state: paused !important;
+}
+[data-anim-pause].is-onscreen * {
+  animation-play-state: running !important;
 }
 
 /* ============ STYLES — showroom exhibits ============ */
