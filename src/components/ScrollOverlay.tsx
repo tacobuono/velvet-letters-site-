@@ -18,9 +18,9 @@ const HOLD = 0.3;
 const FADE = 0.2;
 
 /**
- * Fixed, cross-fading DOM copy — one panel per scene, positioned per the brief.
- * A tall (600vh) spacer drives the scroll length; the canvas sits fixed behind.
- * Opacity is updated imperatively in a rAF loop to avoid per-frame React renders.
+ * Fixed, cross-fading DOM copy — one panel per scene beat. A tall (1080vh)
+ * spacer drives the scroll length; the canvas sits fixed behind. Opacity is
+ * updated imperatively in a rAF loop to avoid per-frame React renders.
  */
 export function ScrollOverlay({ scrollTo }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -56,7 +56,7 @@ export function ScrollOverlay({ scrollTo }: Props) {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [navigate]);
 
   return (
     <>

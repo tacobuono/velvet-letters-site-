@@ -70,13 +70,13 @@ export function useLenis(onUpdate?: () => void): React.RefObject<Lenis | null> {
     }
 
     const lenis = new Lenis({
-      // Slow, smooth luxury glide for the home zoom-parallax. Longer duration =
-      // more momentum smoothing; low wheelMultiplier keeps a sensitive trackpad
-      // from lurching through the dolly.
-      duration: 1.8,
+      // Tighter glide: the old 1.8s/0.75 "luxury" tuning lagged so far behind
+      // the wheel that the journey read as swimmy, not smooth. 1.1s with a 1:1
+      // wheel keeps the cinematic ease but tracks the hand.
+      duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 0.75,
+      wheelMultiplier: 1.0,
       touchMultiplier: 1.1,
     });
     ref.current = lenis;

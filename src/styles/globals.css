@@ -32,6 +32,53 @@ canvas {
   touch-action: pan-y;
 }
 
+/* Shown in place of the canvas when WebGL is unavailable or the 3D scene throws
+   (CanvasErrorBoundary). Keeps the velvet stage so the DOM hero copy stays
+   readable instead of white-screening. */
+.canvas-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 80% at 50% 30%, #3a0a2e 0%, #1a0515 62%),
+    #1a0515;
+}
+
+/* Skip-to-content: hidden until focused, then drops in above all chrome
+   (transition overlay is z-200; this sits above so it's always reachable). */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  transform: translateY(-130%);
+  background: #c9a84c;
+  color: #1a0515;
+  padding: 0.7rem 1.15rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 0.4rem 0;
+  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid #1a0515;
+  outline-offset: 2px;
+}
+
+/* The page region receives focus on route change for screen-reader handoff;
+   it's a programmatic landmark target, so no visible ring on the whole page. */
+main:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

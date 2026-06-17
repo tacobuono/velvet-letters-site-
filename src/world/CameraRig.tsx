@@ -48,10 +48,10 @@ export function CameraRig({ reducedMotion }: Props) {
     const t = easeSegmented(MathUtils.clamp(scroll.progress, 0, 1));
     cameraCurve.getPointAt(t, targetPos);
 
-    // Frame-rate-independent damping. Lower lambda = heavier, slower settle — a
-    // weighted cinematic glide for the zoom-parallax (was 4). The smootherstep
-    // remap above shapes the dwell; 2.5 keeps the dolly slow and buttery.
-    const lambda = 2.5;
+    // Frame-rate-independent damping. 4 tracks the eased scroll closely — the
+    // old 2.5 added a second layer of lag on top of Lenis, and two stacked
+    // smoothings read as swimming, not smoothness.
+    const lambda = 4;
     camera.position.x = MathUtils.damp(camera.position.x, targetPos.x, lambda, dt);
     camera.position.y = MathUtils.damp(camera.position.y, targetPos.y, lambda, dt);
     camera.position.z = MathUtils.damp(camera.position.z, targetPos.z, lambda, dt);
