@@ -21,7 +21,7 @@ export function SiteFooter({ variant = 'pine' }: Props) {
             Velvet Letters
           </div>
           <p className="mt-3 max-w-sm font-editorial text-lg leading-relaxed opacity-80">
-            We package cinematic websites that make people stop, feel, remember, and act.
+            A small press for cinematic websites: set in type, pulled clean, and made to be kept.
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export function SiteFooter({ variant = 'pine' }: Props) {
               paper ? 'bg-ink text-bone' : 'bg-brass text-pine-deep'
             }`}
           >
-            Send the first letter
+            Open a job ticket
           </Link>
         </div>
       </div>

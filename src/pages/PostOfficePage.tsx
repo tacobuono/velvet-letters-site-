@@ -14,7 +14,7 @@ export function PostOfficePage() {
   useSeo({
     title: 'The Post Office — a hidden Velvet Letters experience',
     description:
-      'Open the floating letters and find the hidden stamps. A small interactive experience from Velvet Letters — and a glimpse of how deeply people explore a world worth exploring.',
+      'Open the floating letters and find the hidden stamps. A small interactive experience from Velvet Letters, and a glimpse of how deeply people explore a world worth exploring.',
     path: '/post-office',
     jsonLd: [
       webPageLd('The Velvet Letters Post Office', '/post-office', 'An interactive Easter-egg experience.'),
@@ -34,58 +34,60 @@ export function PostOfficePage() {
   }, []);
 
   return (
-    <div className="bg-pine-deep text-cream">
-      <header className="mx-auto max-w-[1500px] px-6 pb-8 pt-32 text-center sm:px-10 sm:pt-40">
-        <p className="font-grotesk text-[0.7rem] uppercase tracking-[0.45em] text-brass">A hidden experience</p>
-        <h1 className="mx-auto mt-6 max-w-3xl font-display text-[clamp(2.6rem,7vw,6rem)] font-black leading-[0.95]">
-          The Post Office
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl font-editorial text-2xl leading-relaxed text-brass-bright">
-          Float through the dark and open the letters. Some hide a wax-sealed stamp. Find all seven —
-          and you’ll understand exactly what Velvet Letters builds.
+    <div className="pressroom">
+      <header className="imprint pb-10 text-center">
+        <p className="imprint__rule">
+          <span>Velvet Letters · Press &amp; Foundry</span>
+          <span>Back of house · the sorting room</span>
+        </p>
+        <h1 className="imprint__title mx-auto">The Post Office</h1>
+        <p className="press-lede mx-auto">
+          Where the letters go once they are printed. Drift through the dark, open the envelopes, and find the
+          seven that carry a wax seal. Find them all and you will know exactly what this press makes.
         </p>
         <p className="mx-auto mt-4 max-w-xl font-grotesk text-sm text-cream/60">
-          Best on desktop with a mouse. Move to drift, click an envelope to open a letter. Prefers-reduced-motion
-          and keyboard users: the reward and next step are always available below — no play required.
+          Best on desktop with a mouse: move to drift, click an envelope to open it. If you prefer reduced
+          motion or a keyboard, the next step is always available below. No play required.
         </p>
       </header>
 
-      {/* The preserved game, isolated in an iframe (lazy-loaded) */}
-      <section className="mx-auto max-w-[1500px] px-4 sm:px-10">
-        <div className="overflow-hidden rounded-2xl border border-brass/25 bg-black shadow-[0_40px_120px_-40px_rgba(183,147,90,0.35)]">
+      {/* The preserved game, framed like a wall of pigeonholes */}
+      <section className="pigeonholes" aria-label="The Post Office game">
+        <div className="pigeonholes__frame">
           <iframe
             src="/post-office-game/"
             title="Velvet Letters Post Office — open letters and find the hidden stamps"
-            className="h-[78vh] w-full bg-black"
             loading="lazy"
           />
         </div>
+        <p className="pigeonholes__caption">
+          <span>Seven sealed letters</span>
+          <span>{completed ? 'All found' : 'Still sorting'}</span>
+        </p>
       </section>
 
-      {/* Reward — always visible (accessible, not locked behind the canvas); upgrades when completed */}
+      {/* Reward — always visible, upgrades when completed */}
       <section className="mx-auto max-w-3xl px-6 py-24 text-center sm:px-10">
-        <p className="font-grotesk text-[0.7rem] uppercase tracking-[0.4em] text-brass">
-          {completed ? '✦ Unlocked' : 'The reward'}
-        </p>
-        <h2 className="mt-5 font-display text-[clamp(1.8rem,4.5vw,3.4rem)] font-bold leading-tight">
-          {completed ? 'You found the hidden letters.' : 'Find the hidden letters.'}
+        <div className={`postmark ${completed ? 'postmark--struck' : ''}`} aria-hidden>
+          <span>
+            Velvet Letters
+            <b>{completed ? 'Delivered' : 'In transit'}</b>
+            {completed ? 'all seven found' : 'seven to find'}
+          </span>
+        </div>
+        <h2 className="press-h2 text-center">
+          {completed ? 'You found every sealed letter.' : 'Find the sealed letters.'}
         </h2>
-        <p className="mx-auto mt-5 max-w-xl font-editorial text-xl leading-relaxed text-cream/80">
-          Want Velvet Letters to build an experience people explore this deeply? That curiosity is exactly
-          what a Velvet Letters site does to your customers.
+        <p className="press-lede mx-auto">
+          That curiosity, the pull to open one more, is exactly what a Velvet Letters site does to your
+          customers. Want one that people explore this deeply?
         </p>
-        <div className="mt-9 flex flex-wrap justify-center gap-4">
-          <Link
-            to="/contact"
-            className="rounded-full bg-brass px-9 py-4 font-grotesk text-[0.8rem] uppercase tracking-[0.22em] text-pine-deep no-underline transition-transform hover:-translate-y-0.5"
-          >
-            Start a project
+        <div className="press-run__actions">
+          <Link to="/contact" className="sort-btn">
+            Open a job ticket
           </Link>
-          <Link
-            to="/styles"
-            className="rounded-full border border-brass px-9 py-4 font-grotesk text-[0.8rem] uppercase tracking-[0.22em] text-brass no-underline"
-          >
-            Explore website styles
+          <Link to="/styles" className="sort-btn sort-btn--lead">
+            Browse the specimens
           </Link>
         </div>
       </section>

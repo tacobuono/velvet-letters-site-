@@ -1,0 +1,471 @@
+/* ============ PRINTED MATTER — paper stock (About, Contact) ============ */
+/* Every inner page is a different piece of print from the same press: About is
+   the imprint, Contact a job ticket, Process the make-ready proofs, Styles the
+   specimen book, the Post Office the sorting room. Two stocks: paper (bone) and
+   the press room (pine). Shared vocabulary (.press-folio, .press-h2, .press-lede,
+   .press-section, .sort-btn, .press-run) lives in the HOME block below. */
+
+.paper {
+  color: #1b1714;
+  background-color: #f2ebdf;
+  background-image: radial-gradient(rgba(27, 23, 20, 0.035) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+.pressroom {
+  color: #f5efe6;
+  background: var(--pine);
+}
+.pressroom .press-folio { color: var(--brass); }
+.pressroom .press-lede { color: rgba(245, 239, 230, 0.74); }
+.paper .sort-btn:focus-visible { outline-color: #1b1714; }
+
+/* ---- Imprint: the masthead every inner page opens with ---- */
+.imprint {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(6.5rem, 4.5rem + 6vw, 10rem) clamp(2.25rem, 5vw, 4rem) 0;
+}
+.imprint__rule {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid currentColor;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+.imprint__title {
+  max-width: 16ch;
+  margin: 2.2rem 0 0;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2.6rem, 1.2rem + 5.6vw, 5.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.imprint__title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--brass-deep);
+}
+.pressroom .imprint__title em { color: var(--brass); }
+.imprint .press-lede { max-width: 42rem; margin-top: 1.6rem; }
+
+/* The press room's masthead sits on the photographed studio. */
+.pressroom-plate {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--pine) url('/bg/studio-pine.webp') center 30% / cover no-repeat;
+}
+.pressroom-plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10, 20, 16, 0.55) 0%, rgba(10, 20, 16, 0.78) 60%, var(--pine) 100%),
+    radial-gradient(60% 60% at 70% 30%, rgba(183, 147, 90, 0.16), transparent 70%);
+}
+.pressroom-hero {
+  position: relative;
+  isolation: isolate;
+  padding-bottom: clamp(3rem, 2rem + 4vw, 6rem);
+}
+
+/* A closing band on the press-room pages: pine-mid so it reads as a new sheet. */
+.press-run--room {
+  background: #16281e;
+  border-top: 1px solid rgba(183, 147, 90, 0.18);
+}
+
+/* ---- ABOUT: house style ---- */
+.house-style {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid #1b1714;
+}
+.house-rule {
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  gap: 0 1.2rem;
+  padding: 1.6rem 0 1.7rem;
+  border-bottom: 1px solid rgba(27, 23, 20, 0.22);
+}
+.house-rule__no {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--brass-deep);
+  font-variant-numeric: lining-nums;
+}
+.house-rule__title {
+  margin: 0 0 0.45rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 1.9rem);
+  line-height: 1.15;
+}
+.house-rule__body {
+  grid-column: 2;
+  max-width: 52ch;
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.16rem;
+  line-height: 1.55;
+  color: #3a352c;
+}
+
+/* ---- ABOUT: the composing stick, every ingredient a sort ---- */
+.composing-stick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 7px 7px 9px;
+  list-style: none;
+  background: #2a231c;
+  border-radius: 3px;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.55),
+    0 24px 50px -30px rgba(27, 23, 20, 0.7);
+}
+.sort {
+  padding: 0.72rem 0.95rem 0.78rem;
+  border-radius: 2px;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #1b1714;
+  background: linear-gradient(180deg, #d8c08a 0%, #b7935a 55%, #a3814c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.25);
+}
+/* Quads: the blank spacing material a compositor sets between words. */
+.quad {
+  width: 14px;
+  align-self: stretch;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #6c6960, #4a483f);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+}
+.quad--em { width: 26px; }
+.composing-stick__caption {
+  margin: 1rem 0 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #6b655c;
+}
+
+/* ---- ABOUT: the index, with dot leaders ---- */
+.index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid #1b1714;
+  border-bottom: 2px solid #1b1714;
+}
+.index__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.7rem;
+  padding: 1.1rem 0;
+}
+.index__row + .index__row { border-top: 1px solid rgba(27, 23, 20, 0.14); }
+.index__sku {
+  flex: 0 0 4.2rem;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--brass-deep);
+}
+.index__name {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(1.15rem, 1rem + 0.7vw, 1.5rem);
+}
+.index__leader {
+  flex: 1 1 3rem;
+  min-width: 3rem;
+  border-bottom: 2px dotted rgba(27, 23, 20, 0.45);
+  transform: translateY(-0.3em);
+}
+.index__note {
+  flex: 0 1 26rem;
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  color: #3a352c;
+  text-align: right;
+}
+
+/* ---- ABOUT: the imprimatur, the one plum seal on the page ---- */
+.imprimatur {
+  position: relative;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: clamp(4rem, 3rem + 4vw, 7rem) 0 0;
+  text-align: center;
+}
+.imprimatur__text {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(1.7rem, 1rem + 2.6vw, 3rem);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.seal {
+  position: absolute;
+  right: -8.5rem;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 7.2rem;
+  height: 7.2rem;
+  border: 2px solid var(--wax-plum);
+  border-radius: 50%;
+  outline: 1px dotted var(--wax-plum);
+  outline-offset: -8px;
+  color: var(--wax-plum);
+  transform: translateY(-40%) rotate(-9deg);
+  opacity: 0.88;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.seal__word {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.seal__sub {
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.46rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ---- CONTACT: the job ticket ---- */
+.ticket {
+  position: relative;
+  padding: clamp(1.4rem, 1rem + 2vw, 2.4rem);
+  background: #f7f1e7;
+  border: 2px solid #1b1714;
+  outline: 1px solid #1b1714;
+  outline-offset: 4px;
+  box-shadow: 0 30px 60px -40px rgba(27, 23, 20, 0.5);
+}
+.ticket__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 1.5rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid #1b1714;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+.ticket__head b { font-weight: 700; }
+.ticket__grid {
+  display: grid;
+  gap: 1.5rem 2rem;
+  margin-top: 1.6rem;
+}
+.ticket__grid--2 { grid-template-columns: minmax(0, 1fr); }
+.ticket__grid--3 { grid-template-columns: minmax(0, 1fr); }
+.ticket__grid + .ticket__grid { margin-top: 1.6rem; }
+.field {
+  display: block;
+  min-width: 0;
+}
+.field__label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #4a443c;
+}
+.field__input {
+  display: block;
+  width: 100%;
+  padding: 0.45rem 0 0.4rem;
+  border: 0;
+  border-bottom: 1px solid rgba(27, 23, 20, 0.55);
+  border-radius: 0;
+  background: transparent;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  line-height: 1.35;
+  color: #1b1714;
+  outline: none;
+  transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+}
+.field__input:focus-visible {
+  border-bottom-color: var(--wax-plum);
+  box-shadow: 0 1px 0 var(--wax-plum);
+}
+select.field__input {
+  appearance: none;
+  padding-right: 1.4rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0h10L5 6z' fill='%231b1714'/%3E%3C/svg%3E") right 0.2rem center / 10px 6px no-repeat;
+  cursor: pointer;
+}
+/* The copy goes on ruled paper. */
+textarea.field__input {
+  min-height: 10.2rem;
+  padding-top: 0.3rem;
+  line-height: 1.7rem;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(1.7rem - 1px),
+    rgba(27, 23, 20, 0.2) calc(1.7rem - 1px),
+    rgba(27, 23, 20, 0.2) 1.7rem
+  );
+  background-attachment: local;
+  resize: vertical;
+}
+.ticket__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 2rem;
+}
+.ticket__alt {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #4a443c;
+}
+.ticket__alt a { color: var(--wax-plum); }
+/* Received: the ticket is stamped and goes to press. */
+.received {
+  display: grid;
+  gap: 0.6rem;
+  padding: 2rem 0 1rem;
+}
+.received__stamp {
+  width: fit-content;
+  padding: 0.35rem 0.9rem 0.4rem;
+  border: 3px double var(--wax-plum);
+  color: var(--wax-plum);
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  transform: rotate(-4deg);
+  mix-blend-mode: multiply;
+}
+.received__title {
+  margin: 0.8rem 0 0;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.7rem;
+}
+.received__body {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  color: #3a352c;
+}
+.received__body a { color: var(--wax-plum); }
+
+/* Terms of the house: the small print beside the ticket. */
+.house-terms {
+  padding-top: 1rem;
+  border-top: 3px double #1b1714;
+}
+.house-terms dt {
+  margin-top: 1.3rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.house-terms dd {
+  margin: 0.3rem 0 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #3a352c;
+}
+.specimen-note {
+  margin-top: 2.2rem;
+  padding: 1.5rem 1.6rem 1.7rem;
+  color: #f5efe6;
+  background: var(--pine);
+  border-radius: 3px;
+}
+.specimen-note p {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: rgba(245, 239, 230, 0.8);
+}
+.specimen-note p b {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  color: #f5efe6;
+}
+.specimen-note a {
+  display: inline-block;
+  margin-top: 0.9rem;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--brass);
+  text-decoration: none;
+  border-bottom: 1px solid var(--brass);
+}
+
+@media (min-width: 640px) {
+  .ticket__grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ticket__grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 639px) {
+  .index__leader { display: none; }
+  .index__note { flex-basis: 100%; text-align: left; }
+}
+/* Not enough margin for the seal beside the text: stamp it above instead. */
+@media (max-width: 1100px) {
+  .seal {
+    position: static;
+    margin: 0 auto 1.4rem;
+    width: 6rem;
+    height: 6rem;
+    transform: rotate(-9deg);
+  }
+  .seal__word { font-size: 0.72rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .field__input { transition: none; }
+}

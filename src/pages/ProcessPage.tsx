@@ -1,73 +1,120 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSeo, webPageLd, breadcrumbLd } from '../lib/seo';
-import { usePauseOffscreen } from '../lib/usePauseOffscreen';
-import { CTASection } from '../layout/CTASection';
+import { PressBand } from '../layout/PressBand';
 import { SiteFooter } from '../layout/SiteFooter';
 
-type Stage = { n: string; title: string; lead: string; outcome: string };
+type Stage = {
+  mark: string;
+  /** What the trade calls this stage of a print job. */
+  trade: string;
+  title: string;
+  body: string;
+  pulled: string;
+};
 
+// Seven stages of make-ready, each named for what happens to the sheet.
 const STAGES: Stage[] = [
-  { n: 'I', title: 'Discovery', lead: 'We discuss your vision, goals, audience, and the exact impression you want to leave.', outcome: 'A shared understanding of who you are and who you are for.' },
-  { n: 'II', title: 'Shared Vision', lead: 'Together we define the emotional and strategic direction — the feeling before the pixels.', outcome: 'Alignment on the emotional and commercial direction.' },
-  { n: 'III', title: 'Agreement', lead: 'We align on exactly what we are creating, the scope, and the standard.', outcome: 'A clear plan and a confident yes.' },
-  { n: 'IV', title: 'Creation', lead: 'Velvet Letters takes the idea and builds the world — structure, 3D, motion, copy.', outcome: 'The idea takes tangible, digital form.' },
-  { n: 'V', title: 'Refinement', lead: 'The rough idea becomes crafted, cinematic, fast, and effective.', outcome: 'Rough becomes remarkable.' },
-  { n: 'VI', title: 'Launch', lead: 'The site ships hyper-crisp, realistic, memorable, and conversion-ready.', outcome: 'A site that performs and photographs.' },
-  { n: 'VII', title: 'Magnetism', lead: 'People notice it, move toward it, and remember it.', outcome: 'Attention becomes demand.' },
+  {
+    mark: 'I',
+    trade: 'Reading the copy',
+    title: 'Discovery',
+    body: 'Before anything is set we read everything: your customers, your competitors, your culture, and the exact impression you want to leave.',
+    pulled: 'A shared picture of who you are and who you are for.',
+  },
+  {
+    mark: 'II',
+    trade: 'Thumbnails',
+    title: 'Shared vision',
+    body: 'Rough sketches of the whole sheet. Together we fix the emotional and commercial direction before a single pixel is drawn.',
+    pulled: 'Agreement on the feeling, and the outcome it has to produce.',
+  },
+  {
+    mark: 'III',
+    trade: 'Signed proof',
+    title: 'Agreement',
+    body: 'Scope, standard and schedule on one page, signed by both of us. The job does not go to the forme until it is.',
+    pulled: 'A clear plan and a confident yes.',
+  },
+  {
+    mark: 'IV',
+    trade: 'Setting the forme',
+    title: 'Creation',
+    body: 'Structure, 3D, motion, copy. The idea is set in real material, one sort at a time, until the page holds together.',
+    pulled: 'The idea in tangible, digital form.',
+  },
+  {
+    mark: 'V',
+    trade: 'Make-ready',
+    title: 'Refinement',
+    body: 'Colour, register, pressure. Every frame, word and transition is adjusted until the impression is even and nothing is out of register.',
+    pulled: 'Rough becomes remarkable, and fast.',
+  },
+  {
+    mark: 'VI',
+    trade: 'The run',
+    title: 'Launch',
+    body: 'The site ships crisp, measured and conversion-ready, with the structure search and answer engines need to find it.',
+    pulled: 'A site that performs and photographs.',
+  },
+  {
+    mark: 'VII',
+    trade: 'The edition circulates',
+    title: 'Magnetism',
+    body: 'People notice it, move toward it, share it. We keep it on press: measuring, re-inking, adding to the edition.',
+    pulled: 'Attention becomes demand.',
+  },
 ];
 
-const TYPES = [
-  '3D websites', 'Immersive websites', 'Cinematic websites', 'Storytelling websites',
-  'SEO / GEO-optimized websites', 'Conversion-focused websites', 'Custom brand worlds', 'Luxury digital experiences',
-];
-
-/** The on-screen mock that climbs fidelity with each stage (0 → 6). */
-function StageScreen({ stage }: { stage: number }) {
+/** The sheet on the bench, gaining ink as the visitor reads down the stages. */
+function ProofSheet({ stage }: { stage: number }) {
   return (
-    <div className={`monitor-screen monitor-stage-${stage}`} aria-hidden>
-      {stage <= 0 && <div className="mon-pixels" />}
-      {stage === 1 && (
-        <div className="mon-wire">
-          <span /><span /><span /><span /><span />
+    <div className={`proof-sheet ${stage >= 6 ? 'proof-sheet--edition' : ''}`} aria-hidden>
+      <div className="proof-sheet__paper">
+        <div key={stage} className="proof-sheet__face">
+          {stage === 0 && <div className="ps-guides" />}
+          {stage === 1 && (
+            <div className="ps-thumbs">
+              <i /><i /><i /><i /><i /><i />
+            </div>
+          )}
+          {(stage === 2 || stage === 3 || stage === 4) && (
+            <div className={`ps-page ${stage >= 3 ? 'ps-page--galley' : ''} ${stage >= 4 ? 'ps-page--colour' : ''}`}>
+              <div className="ps-page__head" />
+              <div className="ps-page__hero" />
+              <div className="ps-page__cols">
+                <i /><i /><i />
+              </div>
+              {stage === 2 && <span className="ps-sign">approved · VL</span>}
+              {stage === 4 && (
+                <>
+                  <span className="ps-register ps-register--tl" />
+                  <span className="ps-register ps-register--br" />
+                </>
+              )}
+            </div>
+          )}
+          {stage >= 5 && (
+            <div className="ps-print">
+              <div className="ps-print__nav">
+                <b /><i /><i /><i />
+              </div>
+              <p className="ps-print__headline">We set your brand in type.</p>
+              <div className="ps-print__body" />
+              <span className="ps-print__seal">VL</span>
+              <span className="ps-print__no">{stage >= 6 ? 'Edition · 0001 / 0500' : 'First pull'}</span>
+            </div>
+          )}
         </div>
-      )}
-      {stage === 2 && (
-        <div className="mon-layout">
-          <div className="mon-bar" />
-          <div className="mon-hero" />
-          <div className="mon-cols"><i /><i /><i /></div>
-        </div>
-      )}
-      {stage === 3 && (
-        <div className="mon-layout mon-gray">
-          <div className="mon-bar" />
-          <div className="mon-hero" />
-          <div className="mon-cols"><i /><i /><i /></div>
-        </div>
-      )}
-      {stage === 4 && (
-        <div className="mon-layout mon-color">
-          <div className="mon-bar" />
-          <div className="mon-hero" />
-          <div className="mon-cols"><i /><i /><i /></div>
-        </div>
-      )}
-      {stage >= 5 && (
-        <div className={`mon-polished ${stage >= 6 ? 'mon-cine' : ''}`}>
-          <div className="mon-nav"><b /><span /><span /><span /></div>
-          <div className="mon-headline">Velvet Letters</div>
-          <div className="mon-cta">Start a project</div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
 
 export function ProcessPage() {
   useSeo({
-    title: 'Process — How a Velvet Letters site becomes real',
+    title: 'Process — seven stages from blank sheet to edition | Velvet Letters',
     description:
-      'Watch the screen become real. Velvet Letters builds cinematic websites in seven stages — Discovery, Shared Vision, Agreement, Creation, Refinement, Launch, and Magnetism.',
+      'How a Velvet Letters site is made: Discovery, Shared Vision, Agreement, Creation, Refinement, Launch and Magnetism, told as the make-ready of a print job.',
     path: '/process',
     jsonLd: [
       webPageLd('The Velvet Letters Process', '/process', 'From the first conversation to a site people move toward.'),
@@ -75,19 +122,14 @@ export function ProcessPage() {
     ],
   });
 
-  usePauseOffscreen(); // pause the looping "crowd" animation when off-screen
-
   const [active, setActive] = useState(0);
-  const stageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const stageRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) {
-            const idx = Number((e.target as HTMLElement).dataset.stage);
-            setActive(idx);
-          }
+          if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.stage));
         });
       },
       { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
@@ -97,83 +139,69 @@ export function ProcessPage() {
   }, []);
 
   return (
-    <div className="bg-pine-deep text-cream">
-      {/* Hero — over the shoulder */}
-      <header className="relative flex min-h-[88vh] flex-col items-center justify-center overflow-hidden px-6 text-center">
-        <div className="shoulder" aria-hidden />
-        <div className="screen-glow" aria-hidden />
-        <p className="relative z-10 font-grotesk text-[0.7rem] uppercase tracking-[0.45em] text-brass">The Velvet Letters Process</p>
-        <h1 className="relative z-10 mt-6 font-display text-[clamp(3rem,9vw,8rem)] font-black leading-[0.92]">
-          The screen
-          <br />
-          <span className="italic text-brass">becomes real.</span>
-        </h1>
-        <p className="relative z-10 mt-8 max-w-xl font-editorial text-2xl leading-relaxed text-brass-bright">
-          Sit beside us. From a blank, pixelated rectangle to a cinematic site people move toward — this is
-          how the impression gets made.
-        </p>
+    <div className="pressroom">
+      <header className="pressroom-hero">
+        <div className="pressroom-plate" aria-hidden />
+        <div className="imprint">
+          <p className="imprint__rule">
+            <span>Velvet Letters · Press &amp; Foundry</span>
+            <span>Make-ready · seven stages</span>
+          </p>
+          <h1 className="imprint__title">
+            Seven stages between a blank sheet and an <em>edition</em> people keep.
+          </h1>
+          <p className="press-lede">
+            A print job is not pulled in one go. It is read, sketched, signed, set, made ready and run.
+            Sit at the bench and watch the sheet take ink.
+          </p>
+        </div>
       </header>
 
-      {/* Transformation — sticky monitor + stages */}
-      <section className="mx-auto grid max-w-[1500px] gap-10 px-6 py-16 sm:px-10 lg:grid-cols-[1fr_1fr]">
-        <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center">
-          <div className="monitor">
-            <StageScreen stage={active} />
-            <div className="monitor-stand" aria-hidden />
-            <p className="mt-4 text-center font-grotesk text-[0.7rem] uppercase tracking-[0.3em] text-brass/85">
-              Stage {STAGES[active].n} — {STAGES[active].title}
-            </p>
-          </div>
+      <section className="makeready" aria-label="The seven stages">
+        <div className="makeready__sheet">
+          <ProofSheet stage={active} />
+          <p className="makeready__caption">
+            Stage {STAGES[active].mark} — {STAGES[active].trade}
+          </p>
         </div>
 
-        <div>
+        <ol className="ps-stages">
           {STAGES.map((s, i) => (
-            <div
-              key={s.n}
+            <li
+              key={s.mark}
               data-stage={i}
               ref={(el) => {
                 stageRefs.current[i] = el;
               }}
-              className={`flex min-h-[70vh] flex-col justify-center border-l-2 py-10 pl-8 transition-colors duration-500 ${
-                active === i ? 'border-brass' : 'border-brass/15'
-              }`}
+              className={`ps-stage ${active === i ? 'is-active' : ''}`}
             >
-              <span className="font-display text-5xl font-black text-brass/60">{s.n}</span>
-              <h2 className="mt-3 font-display text-[clamp(2rem,4vw,3.4rem)] font-bold">{s.title}</h2>
-              <p className="mt-4 max-w-md font-editorial text-xl leading-relaxed text-cream/80">{s.lead}</p>
-              <p className="mt-4 max-w-md font-grotesk text-[0.8rem] uppercase tracking-[0.18em] text-brass">
-                → {s.outcome}
+              {/* Below the two-column breakpoint the bench is not sticky, so each
+                  stage carries its own small sheet. */}
+              <div className="ps-stage__mini">
+                <ProofSheet stage={i} />
+              </div>
+              <p className="ps-stage__trade">
+                <b>{s.mark}</b>
+                {s.trade}
               </p>
-              {i === STAGES.length - 1 && (
-                <div className="crowd mt-8" data-anim-pause aria-hidden>
-                  {Array.from({ length: 9 }).map((_, k) => (
-                    <span key={k} style={{ animationDelay: `${k * 0.12}s` }} />
-                  ))}
-                </div>
-              )}
-            </div>
+              <h2 className="ps-stage__title">{s.title}</h2>
+              <p className="ps-stage__body">{s.body}</p>
+              <p className="ps-stage__pulled">
+                <b>Pulled</b>
+                {s.pulled}
+              </p>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
 
-      {/* What we build */}
-      <section className="mx-auto max-w-[1500px] px-6 py-20 sm:px-10">
-        <h2 className="font-grotesk text-[0.8rem] uppercase tracking-[0.4em] text-brass">What we build</h2>
-        <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-brass/15 bg-brass/15 sm:grid-cols-2 lg:grid-cols-4">
-          {TYPES.map((t) => (
-            <div key={t} className="bg-pine-midpx-6 py-8 font-display text-xl font-bold text-cream">
-              {t}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <CTASection
-        eyebrow="Your impression, made real"
-        heading="Let's build something people move toward."
-        sub="Tell us the feeling you want to leave. We'll engineer everything to protect it."
-        primary={{ label: 'Send the first letter', to: '/contact' }}
-        secondary={{ label: 'Explore website styles', to: '/styles' }}
+      <PressBand
+        stock="room"
+        eyebrow="Your sheet"
+        heading="Ready to pull the first proof?"
+        body="Open a ticket with what you know. We read everything before anything is set."
+        primary={{ label: 'Open a job ticket', to: '/contact' }}
+        secondary={{ label: 'Browse the specimens', to: '/styles' }}
       />
       <SiteFooter />
     </div>

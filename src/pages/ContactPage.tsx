@@ -1,176 +1,190 @@
 import { useState, type FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { useSeo, webPageLd, breadcrumbLd, faqLd } from '../lib/seo';
 import { CONTACT_EMAIL } from '../lib/tokens';
 import { SiteFooter } from '../layout/SiteFooter';
 
-const FRAGMENTS = [
-  'tell me the idea', 'what should people feel?', 'what should they remember?',
-  'send the spark', "let's make it cinematic", "let's make it convert", 'what are we building?',
-  'who is it for?', 'what is the impression?', 'start here',
+const TERMS = [
+  {
+    q: 'What does Velvet Letters print?',
+    a: 'Cinematic, custom websites: 3D, immersive, storytelling and conversion-focused experiences for brands that want to be remembered.',
+  },
+  {
+    q: 'How does a job start?',
+    a: `Fill the ticket, or write to ${CONTACT_EMAIL}. We reply with a short discovery conversation, then a signed proof of scope before anything is set.`,
+  },
+  {
+    q: 'How many jobs do you take?',
+    a: 'One flagship site a quarter, alongside a few smaller runs. If the press is full we will tell you when the next slot opens.',
+  },
 ];
 
-const FAQS = [
-  { q: 'What does Velvet Letters build?', a: 'Cinematic, custom websites — 3D, immersive, storytelling, and conversion-focused experiences for premium brands.' },
-  { q: 'How do we start?', a: 'Send the first letter using the form below, or email hello@velvetletters.com. We reply with a short discovery conversation.' },
-];
+/** The ticket number is the date the ticket was opened: YYMMDD. */
+function jobNumber() {
+  return new Date().toISOString().slice(2, 10).replace(/-/g, '');
+}
 
 export function ContactPage() {
   useSeo({
-    title: "Contact — Let's talk | Velvet Letters",
+    title: 'Contact — open a job ticket | Velvet Letters',
     description:
-      "Start a cinematic website with Velvet Letters. Tell us the idea, the feeling, and who it's for — and we'll make it cinematic and make it convert.",
+      'Commission a cinematic website from Velvet Letters. Tell us the job, who it is for and when it is wanted by, and we will reply with a discovery conversation.',
     path: '/contact',
     jsonLd: [
-      webPageLd('Contact Velvet Letters', '/contact', "Start a project with Velvet Letters."),
+      webPageLd('Contact Velvet Letters', '/contact', 'Open a job ticket with Velvet Letters.'),
       breadcrumbLd([{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }]),
-      faqLd(FAQS),
+      faqLd(TERMS),
     ],
   });
 
   const [sent, setSent] = useState(false);
+  const [jobNo] = useState(jobNumber);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     const body = [
-      `Name: ${f.get('name')}`,
-      `Email: ${f.get('email')}`,
-      `Project type: ${f.get('type')}`,
-      `Timeline: ${f.get('timeline')}`,
-      `Budget: ${f.get('budget')}`,
+      `Job ticket No. ${jobNo}`,
+      `Client: ${f.get('name')}`,
+      `Reply to: ${f.get('email')}`,
+      `Job: ${f.get('type')}`,
+      `Wanted by: ${f.get('timeline')}`,
+      `Run size: ${f.get('budget')}`,
       '',
       `${f.get('message')}`,
     ].join('\n');
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-      'A new letter — ' + (f.get('name') || 'project'),
+      `Job ticket ${jobNo} — ${f.get('name') || 'new job'}`,
     )}&body=${encodeURIComponent(body)}`;
     setSent(true);
   }
 
-  const field = 'w-full rounded-md border-2 border-ink/30 bg-white/60 px-4 py-3 font-grotesk text-ink outline-none focus:border-wax';
-  const label = 'mb-1 block font-grotesk text-[0.72rem] uppercase tracking-[0.18em] text-ink/70';
-
   return (
-    <div className="halftone bg-bone text-ink">
-      {/* Masthead */}
-      <header className="mx-auto max-w-[1500px] px-6 pt-28 sm:px-10 sm:pt-36">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-y-2 border-ink py-2 font-grotesk text-[0.7rem] uppercase tracking-[0.25em]" data-reveal>
-          <span>The Velvet Letters Classifieds</span>
-          <span>Sunny edition · Open for projects</span>
-        </div>
-
-        <div className="py-10 text-center">
-          <p className="font-grotesk text-[0.72rem] uppercase tracking-[0.4em] text-wax">Wanted: brave brands</p>
-          <h1 className="lets-talk mt-4" aria-label="Let's talk">
-            <span>LET&rsquo;S</span>
-            <span>TALK</span>
-          </h1>
-          {/* Big word, made of small sentences */}
-          <div className="mx-auto mt-6 max-w-3xl columns-2 gap-8 text-left font-editorial text-base leading-snug text-ink/70 sm:columns-3" aria-hidden>
-            {FRAGMENTS.concat(FRAGMENTS).map((t, i) => (
-              <p key={i} className="mb-1 break-inside-avoid">— {t}</p>
-            ))}
-          </div>
-        </div>
+    <div className="paper">
+      <header className="imprint">
+        <p className="imprint__rule">
+          <span>Velvet Letters · Press &amp; Foundry</span>
+          <span>Job tickets · open</span>
+        </p>
+        <h1 className="imprint__title proof-line">
+          Tell us what you&rsquo;d like <del>built</del> <ins>printed</ins>.
+        </h1>
+        <p className="press-lede">
+          Every job here starts on a ticket. Fill in what you know; we will read every word and come back
+          with a conversation, not a quote.
+        </p>
       </header>
 
-      {/* Form + sidebar */}
-      <section className="mx-auto grid max-w-[1500px] gap-12 px-6 py-12 sm:px-10 lg:grid-cols-[1.4fr_1fr]">
+      <section className="press-section grid gap-12 lg:grid-cols-[1.45fr_1fr] lg:gap-16" aria-label="Job ticket and terms">
         <div>
-          <h2 className="font-display text-4xl font-black">Send the first letter.</h2>
-          <p className="mt-3 max-w-md font-editorial text-xl text-ink/80">
-            Tell us the idea and the feeling. We read every one.
-          </p>
-
           {sent ? (
-            <div className="mt-8 rounded-lg border-2 border-wax bg-wax/20 p-8" role="status">
-              <p className="font-display text-2xl font-bold text-wax">Your letter is on its way.</p>
-              <p className="mt-2 font-editorial text-lg text-ink/80">
-                If your mail app didn’t open, email us directly at{' '}
-                <a className="text-wax underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
-              </p>
+            <div className="ticket" role="status">
+              <div className="ticket__head">
+                <span>
+                  Job ticket <b>No. {jobNo}</b>
+                </span>
+                <span>To press</span>
+              </div>
+              <div className="received">
+                <span className="received__stamp">Received</span>
+                <p className="received__title">Your ticket is on its way to the press.</p>
+                <p className="received__body">
+                  If your mail app did not open, write to us directly at{' '}
+                  <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+                </p>
+              </div>
             </div>
           ) : (
-            <form className="mt-8 grid gap-5" onSubmit={onSubmit}>
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label className={label} htmlFor="name">Name</label>
-                  <input className={field} id="name" name="name" required autoComplete="name" />
-                </div>
-                <div>
-                  <label className={label} htmlFor="email">Email</label>
-                  <input className={field} id="email" name="email" type="email" required autoComplete="email" />
-                </div>
+            <form className="ticket" onSubmit={onSubmit}>
+              <div className="ticket__head">
+                <span>
+                  Job ticket <b>No. {jobNo}</b>
+                </span>
+                <span>Received ________</span>
               </div>
-              <div className="grid gap-5 sm:grid-cols-3">
-                <div>
-                  <label className={label} htmlFor="type">Project type</label>
-                  <select className={field} id="type" name="type" defaultValue="Cinematic site">
+
+              <div className="ticket__grid ticket__grid--2">
+                <label className="field" htmlFor="name">
+                  <span className="field__label">Client</span>
+                  <input className="field__input" id="name" name="name" required autoComplete="name" />
+                </label>
+                <label className="field" htmlFor="email">
+                  <span className="field__label">Reply to</span>
+                  <input className="field__input" id="email" name="email" type="email" required autoComplete="email" />
+                </label>
+              </div>
+
+              <div className="ticket__grid ticket__grid--3">
+                <label className="field" htmlFor="type">
+                  <span className="field__label">Job</span>
+                  <select className="field__input" id="type" name="type" defaultValue="Cinematic site">
                     <option>Cinematic site</option>
                     <option>3D / immersive</option>
                     <option>Storytelling</option>
                     <option>Conversion-focused</option>
-                    <option>Other</option>
+                    <option>Not sure yet</option>
                   </select>
-                </div>
-                <div>
-                  <label className={label} htmlFor="timeline">Timeline</label>
-                  <select className={field} id="timeline" name="timeline" defaultValue="1–3 months">
-                    <option>ASAP</option>
+                </label>
+                <label className="field" htmlFor="timeline">
+                  <span className="field__label">Wanted by</span>
+                  <select className="field__input" id="timeline" name="timeline" defaultValue="1–3 months">
+                    <option>As soon as the press is free</option>
                     <option>1–3 months</option>
                     <option>3–6 months</option>
                     <option>Exploring</option>
                   </select>
-                </div>
-                <div>
-                  <label className={label} htmlFor="budget">Budget range</label>
-                  <select className={field} id="budget" name="budget" defaultValue="$10k–$25k">
+                </label>
+                <label className="field" htmlFor="budget">
+                  <span className="field__label">Run size</span>
+                  <select className="field__input" id="budget" name="budget" defaultValue="$10k–$25k">
                     <option>&lt; $10k</option>
                     <option>$10k–$25k</option>
                     <option>$25k–$50k</option>
                     <option>$50k+</option>
                   </select>
-                </div>
+                </label>
               </div>
-              <div>
-                <label className={label} htmlFor="message">What are we building?</label>
-                <textarea className={`${field} min-h-[8rem]`} id="message" name="message" required />
+
+              <div className="ticket__grid">
+                <label className="field" htmlFor="message">
+                  <span className="field__label">Copy — what are we setting, and for whom?</span>
+                  <textarea className="field__input" id="message" name="message" required />
+                </label>
               </div>
-              <button
-                type="submit"
-                className="w-fit rounded-full bg-ink px-9 py-4 font-grotesk text-[0.8rem] uppercase tracking-[0.22em] text-brass transition-transform hover:-translate-y-0.5"
-              >
-                Send the first letter
-              </button>
-              <p className="font-grotesk text-sm text-ink/60">
-                Prefer email? <a className="text-wax underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-              </p>
+
+              <div className="ticket__foot">
+                <button type="submit" className="sort-btn">
+                  Send to press
+                </button>
+                <p className="ticket__alt">
+                  Prefer a letter? <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+                </p>
+              </div>
             </form>
           )}
         </div>
 
-        {/* Classified sidebar */}
-        <aside className="space-y-6">
-          <div className="rounded-lg border-2 border-ink p-6">
-            <h3 className="font-display text-2xl font-bold">Common questions</h3>
-            <dl className="mt-4 space-y-4">
-              {FAQS.map((f) => (
-                <div key={f.q}>
-                  <dt className="font-grotesk text-sm font-semibold uppercase tracking-[0.1em]">{f.q}</dt>
-                  <dd className="mt-1 font-editorial text-lg text-ink/80">{f.a}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-          <div className="rounded-lg bg-brass p-6">
-            <p className="font-display text-2xl font-bold">No bad ideas here.</p>
-            <p className="mt-2 font-editorial text-lg text-ink/80">
-              Even a one-line spark is enough to start. Send it.
+        <aside>
+          <dl className="house-terms" aria-label="Terms of the house">
+            {TERMS.map((t) => (
+              <div key={t.q}>
+                <dt>{t.q}</dt>
+                <dd>{t.a}</dd>
+              </div>
+            ))}
+          </dl>
+          <div className="specimen-note">
+            <p>
+              <b>Specimens on request.</b>
+              Not sure which kind of site you need? The specimen book shows all eight faces we cut, set in
+              their own type.
             </p>
+            <Link to="/styles">Open the specimen book</Link>
           </div>
         </aside>
       </section>
 
+      <div className="pb-24" />
       <SiteFooter variant="paper" />
     </div>
   );
