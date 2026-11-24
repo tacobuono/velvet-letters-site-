@@ -1,5 +1,5 @@
 // Shared site constants. (The old home's copy lived here; the redesigned home
-// keeps its copy beside its markup in src/components/BoxedOverlay.tsx.)
+// keeps its copy beside its markup in src/components/PressSheet.tsx.)
 
 export const NAV_LINKS = [
   { label: 'About', href: 'about.html' },

@@ -9,7 +9,7 @@
 @import '@fontsource/outfit/latin-300.css';
 @import '@fontsource/outfit/latin-400.css';
 @import '@fontsource/outfit/latin-500.css';
-/* Redesign ("Website, Boxed") — tight neo-grotesk for Silencio-style caps. */
+/* Archivo: the grotesk used for labels, folios and interface text. */
 @import '@fontsource/archivo/latin-400.css';
 @import '@fontsource/archivo/latin-500.css';
 @import '@fontsource/archivo/latin-600.css';
@@ -47,7 +47,9 @@ body {
   font-family: 'Outfit', sans-serif;
   background: #0a1410;
   color: #f5efe6;
-  overflow-x: hidden;
+  /* clip, not hidden: hidden would make body a scroll container and break the
+     home's position: sticky press stage. */
+  overflow-x: clip;
   cursor: default;
 }
 
@@ -133,38 +135,107 @@ main:focus {
   width: 100%;
 }
 
-/* Preloader animations */
-@keyframes preloaderBreathe {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.02);
+/* ============ LOADER — inking the forme ============ */
+/* The failsafe is the whole point of the CSS: `loaderRetire` lifts the loader on
+   its own at MAX_MS + margin, so even if no script ever runs, the page is never
+   blocked. The script normally wins earlier via .press-loader--done. */
+.press-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  background: #0a1410;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+  /* Failsafe: retire on a timer even if the script never runs. */
+  animation: loaderRetire 0.7s ease 5.6s forwards;
+}
+.press-loader--done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+@keyframes loaderRetire {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 }
-@keyframes preloaderSlide {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
+.press-loader__forme {
+  position: relative;
+  padding: 0.55rem 1.4rem 0.7rem;
+  background: linear-gradient(180deg, #2e3031, #1c1e1f);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 18px 40px -18px rgba(0, 0, 0, 0.8);
 }
-.preloader-breathe {
-  animation: preloaderBreathe 2s ease-in-out infinite;
+.press-loader__type {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #b7935a;
 }
-.preloader-slide {
-  animation: preloaderSlide 1.5s ease-in-out infinite;
+/* As set in the forme: mirror-reversed. */
+.press-loader__mirror {
+  display: inline-block;
+  transform: scaleX(-1);
 }
-
+/* The inked copy sits exactly over the brass one and is revealed by the roller. */
+.press-loader__type--inked {
+  position: absolute;
+  inset: 0.55rem 1.4rem 0.7rem;
+  color: #6e2140;
+  clip-path: inset(0 100% 0 0);
+  animation: loaderInk 1.4s cubic-bezier(0.45, 0, 0.2, 1) 0.2s forwards;
+}
+@keyframes loaderInk {
+  to { clip-path: inset(0 0 0 0); }
+}
+.press-loader__track {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+/* The brayer: a brass-capped roller that crosses the type once. It is as
+   wide as the track and slides by its own width, so it needs no measurement. */
+.press-loader__roller {
+  position: absolute;
+  top: -8%;
+  bottom: -8%;
+  left: -14px;
+  width: 100%;
+  border-right: 14px solid transparent;
+  background: linear-gradient(90deg, #d8c08a, #8a6a38 55%, #5a4524) right / 14px 100% no-repeat;
+  box-shadow: none;
+  filter: drop-shadow(4px 0 10px rgba(0, 0, 0, 0.5));
+  transform: translateX(-100%);
+  animation: loaderRoll 1.4s cubic-bezier(0.45, 0, 0.2, 1) 0.2s forwards;
+}
+@keyframes loaderRoll {
+  /* One roller width past the edge, so the brayer leaves the track entirely. */
+  to { transform: translateX(28px); }
+}
+.press-loader__caption {
+  margin: 0;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 230, 0.55);
+}
 @media (prefers-reduced-motion: reduce) {
-  .preloader-breathe,
-  .preloader-slide {
-    animation: none;
-  }
+  .press-loader__type--inked { animation-duration: 0.01s; clip-path: inset(0); }
+  .press-loader__roller { display: none; }
 }
 
 /* ============ ROUTE PAGE TRANSITION ============ */
@@ -202,74 +273,57 @@ main:focus {
   [data-reveal] { opacity: 1 !important; transform: none !important; transition: none; }
 }
 
-/* ============ BRANDED PAGE TRANSITION (pine curtain + plum wax seal) ============ */
-/* One motif site-wide. Driven by GSAP from src/layout/PageTransition.tsx. Sits
-   above the nav (z-100) so the cover fully hides Canvas mount/unmount. Idle:
-   hidden + non-interactive so it never blocks clicks. */
+/* ============ ROUTE TRANSITION — one impression ============ */
+/* Driven by GSAP from src/layout/PageTransition.tsx: a sheet is laid over the
+   screen, the mark is printed on it, and it is pulled away. Sits above the nav
+   (z-100) so the cover fully hides Canvas mount/unmount. Idle: hidden +
+   non-interactive so it never blocks clicks. */
 .vt-root {
   position: fixed;
   inset: 0;
   z-index: 200;
-  display: grid;
-  place-items: center;
   visibility: hidden;
   pointer-events: none;
 }
-.vt-curtain {
+.vt-sheet {
   position: absolute;
   inset: 0;
-  transform: scaleY(0);
-  transform-origin: 50% 0%;
-  /* will-change is applied by GSAP only while a transition runs, then cleared —
-     the overlay is hidden ~99% of the time, so a permanent GPU layer is waste. */
-  background:
-    radial-gradient(120% 78% at 50% 0%, rgba(31, 58, 42, 0.6), transparent 62%),
-    linear-gradient(180deg, #16281e 0%, #0a1410 100%);
+  display: grid;
+  place-items: center;
+  /* No idle transform here: GSAP owns the sheet's position, and .vt-root is
+     hidden between runs. */
+  color: #1b1714;
+  background-color: #f2ebdf;
+  background-image: radial-gradient(rgba(27, 23, 20, 0.035) 1px, transparent 1px);
+  background-size: 4px 4px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
 }
-/* Pine drape: soft vertical folds catching a low sheen. */
-.vt-curtain::before {
-  content: '';
+.vt-crop {
   position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.05) 0,
-    rgba(255, 255, 255, 0.05) 2px,
-    rgba(0, 0, 0, 0.12) 64px,
-    rgba(255, 255, 255, 0.035) 128px
-  );
-  mix-blend-mode: overlay;
-  opacity: 0.55;
+  width: 22px;
+  height: 22px;
+  border-color: #1b1714;
 }
-/* Warm brass glow pooling toward the seal. */
-.vt-curtain::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(78% 50% at 50% 46%, rgba(183, 147, 90, 0.14), transparent 70%);
-}
-.vt-seal {
-  position: relative;
-  z-index: 1;
-  width: clamp(82px, 13vw, 138px);
-  height: clamp(82px, 13vw, 138px);
+.vt-crop--tl { top: 22px; left: 22px; border-top: 1px solid; border-left: 1px solid; }
+.vt-crop--tr { top: 22px; right: 22px; border-top: 1px solid; border-right: 1px solid; }
+.vt-crop--bl { bottom: 22px; left: 22px; border-bottom: 1px solid; border-left: 1px solid; }
+.vt-crop--br { bottom: 22px; right: 22px; border-bottom: 1px solid; border-right: 1px solid; }
+.vt-mark {
+  width: clamp(96px, 14vw, 150px);
+  height: clamp(96px, 14vw, 150px);
   opacity: 0;
-  /* will-change set/cleared by GSAP around the transition (see .vt-curtain). */
-  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.45));
+  /* will-change set/cleared by GSAP around the transition. */
 }
-
-@media (prefers-reduced-motion: reduce) {
-  /* JS already swaps to a cross-fade; keep folds/sheen calm. */
-  .vt-curtain::before { opacity: 0.4; }
-}
-
-/* CTA: dims the parcel hard behind the centred closing headline so the text
-   always lands on quiet dark ground. */
-.cta-scrim {
+.vt-folio {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(ellipse 50% 50% at 50% 46%, rgba(6, 12, 9,0.92) 0%, rgba(6, 12, 9,0.7) 48%, transparent 78%);
+  right: 54px;
+  bottom: 23px;
+  margin: 0;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.56rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(27, 23, 20, 0.6);
 }
 
 /* ============ ABOUT — paper / catalogue ============ */
@@ -586,242 +640,405 @@ main:focus {
   }
 }
 
-/* ============ REDESIGN — "WEBSITE, BOXED" (home) ============ */
+/* ============ HOME — "THE PRESS" ============ */
 .font-grotesk { font-family: 'Archivo', 'Outfit', sans-serif; }
 
-/* Photoreal dark-studio backplate behind the transparent canvas. */
-.boxed-plate {
-  position: fixed;
+/* Shown in place of the canvas when WebGL is unavailable. */
+.press-fallback {
+  position: absolute;
   inset: 0;
-  z-index: 0;
   background: var(--pine) url('/bg/studio-pine.webp') center / cover no-repeat;
 }
 
-/* Soft bed behind the intro statement so caps stay readable over the bright
-   studio floor, without flattening the dark set. */
-.boxed-hero-scrim {
+/* ---- Hero copy: cream over the forme, ink once the sheet is under it ---- */
+.press-copy { color: #f5efe6; }
+/* The headline sits over the forme, so once the sheet is laid it is over paper. */
+.press-copy__lockup { transition: color 0.35s ease; }
+.press-copy--on-paper .press-copy__lockup { color: #1b1714; }
+.press-copy__scrim {
   position: absolute;
   inset: 0;
-  pointer-events: none;
   background: linear-gradient(
     180deg,
-    transparent 30%,
-    rgba(8, 5, 10, 0.42) 54%,
-    rgba(8, 5, 10, 0.52) 74%,
-    rgba(8, 5, 10, 0.3) 92%,
-    transparent 100%
+    rgba(6, 12, 9, 0.6) 0%,
+    transparent 24%,
+    transparent 50%,
+    rgba(6, 12, 9, 0.8) 100%
   );
+  transition: opacity 0.35s ease;
 }
+.press-copy--on-paper .press-copy__scrim { opacity: 0; }
 
-/* Intro statement — Silencio-style justified grotesk caps. */
-.boxed-hero {
-  width: 100%;
-  max-width: 1040px;
-  margin: 0 auto;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.005em;
-  line-height: 1.12;
-  text-align: justify;
-  text-align-last: center;
-  font-size: clamp(1.4rem, 0.9rem + 3.1vw, 3.1rem);
-  color: #f5efe6;
-  text-shadow: 0 2px 44px rgba(0, 0, 0, 0.6);
-}
-
-/* Justified caps need line length to work; on phones they open ugly rivers, so
-   set them centred instead. */
-@media (max-width: 640px) {
-  .boxed-hero {
-    text-align: center;
-  }
-}
-
-.handle-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  border: 1px solid rgba(245, 239, 230, 0.4);
-  border-radius: 999px;
-  padding: 0.42rem 0.95rem;
-  font-size: 0.58rem;
+.press-eyebrow {
+  margin: 0;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.62rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: #f5efe6;
-  backdrop-filter: blur(2px);
+  opacity: 0.82;
+}
+.press-headline {
+  width: fit-content;
+  max-width: 11ch;
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2.3rem, 1.2rem + 3.6vw, 4.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+/* As set in the forme: mirror-reversed until the impression is pulled. */
+.press-headline--set { transform: rotateY(180deg); }
+.press-caption {
+  margin: 1.1rem 0 0;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  opacity: 0.86;
 }
 
-.boxed-counter {
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
+/* ---- Printer's marks (fixed chrome) ---- */
+.press-marks {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  color: #f5efe6;
+  mix-blend-mode: difference; /* reads on the dark forme and on the paper */
+}
+.crop {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+}
+.crop--tl { top: 76px; left: 14px; border-top: 1px solid; border-left: 1px solid; }
+.crop--tr { top: 76px; right: 14px; border-top: 1px solid; border-right: 1px solid; }
+.crop--bl { bottom: 14px; left: 14px; border-bottom: 1px solid; border-left: 1px solid; }
+.crop--br { bottom: 14px; right: 14px; border-bottom: 1px solid; border-right: 1px solid; }
+.impression {
+  position: absolute;
+  right: 46px;
+  bottom: 15px;
+  margin: 0;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.56rem;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: rgba(245, 239, 230, 0.78);
-  border-top: 1px solid rgba(183, 147, 90, 0.5);
-  padding-top: 0.5rem;
   font-variant-numeric: tabular-nums;
 }
-
-.boxed-cta {
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  line-height: 0.98;
-  font-size: clamp(2.4rem, 7vw, 5rem);
-  color: #f5efe6;
-  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.55);
-}
-
-.boxed-manifesto {
-  max-width: 22ch;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  line-height: 1.05;
-  font-size: clamp(1.9rem, 1rem + 4.1vw, 3.9rem);
-  color: #f5efe6;
-  text-wrap: balance;
-  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.55);
-}
-
-/* Product spec-label panels (pinned left/right; parcel holds centre). */
-.spec-label {
-  width: 100%;
+/* Colour bar = scroll progress. Kept out of the blended layer so its swatches
+   stay true colours. */
+.colour-bar {
+  position: fixed;
+  left: 14px;
+  top: 50%;
+  z-index: 40;
   display: flex;
-  padding: 0 clamp(1.25rem, 6vw, 7rem);
+  flex-direction: column;
+  gap: 2px;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
-.spec-label--left { justify-content: flex-start; }
-.spec-label--right { justify-content: flex-end; }
+.colour-bar span {
+  width: 9px;
+  height: 20px;
+  outline: 1px solid rgba(245, 239, 230, 0.35);
+  opacity: 0.16;
+}
 
-.spec-card {
-  width: min(360px, 84vw);
-  background: #f2ebdf;
-  color: #1b1714;
-  border-radius: 4px;
-  padding: 1.4rem 1.5rem 1.3rem;
-  box-shadow:
-    0 46px 90px -42px rgba(0, 0, 0, 0.85),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  font-family: 'Archivo', sans-serif;
+/* ---- The printed sheet (the page) ---- */
+.press-sheet {
+  /* Pulled up under the hero's last stretch (already paper-coloured by then) so
+     the visitor is not left scrolling a blank sheet. */
   position: relative;
+  margin-top: -30vh;
+  color: #1b1714;
+  background-color: #f2ebdf;
+  background-image: radial-gradient(rgba(27, 23, 20, 0.035) 1px, transparent 1px);
+  background-size: 4px 4px;
 }
-.spec-card__top {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.56rem;
+.press-section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(4.5rem, 3rem + 7vw, 9rem) clamp(2.25rem, 5vw, 4rem) 0;
+}
+.press-section__head {
+  max-width: 46rem;
+  margin-bottom: 2.6rem;
+}
+.press-folio {
+  margin: 0 0 1rem;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brass-deep);
+}
+.press-folio--brass { color: var(--brass); }
+.press-h2 {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 1rem + 4.4vw, 4.4rem);
+  line-height: 1.04;
+  text-wrap: balance;
+}
+.press-lede {
+  margin: 1.1rem 0 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.32rem;
+  line-height: 1.55;
+  color: #4a443c;
+}
+
+/* The type case: a drawer of compartments, one face in each. */
+.type-case {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 2px;
+  margin: 0;
+  padding: 2px;
+  list-style: none;
+  background: #2a231c; /* the drawer's dividers show through the gaps */
+  border: 5px solid #2a231c;
+  border-radius: 3px;
+  box-shadow: 0 30px 60px -34px rgba(27, 23, 20, 0.6);
+}
+.type-case__cell {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding: 1.5rem 1.5rem 1.6rem;
+  background: #f2ebdf;
+  box-shadow: inset 0 3px 8px rgba(27, 23, 20, 0.14); /* recessed compartment */
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+.type-case__cell:hover {
+  background: #f8f3ea;
+  box-shadow: inset 0 1px 2px rgba(27, 23, 20, 0.1);
+}
+.type-case__sku {
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.26em;
+  color: var(--brass-deep);
+}
+.type-case__name {
+  margin: 0.55rem 0 0.35rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.2rem);
+  line-height: 1.05;
+}
+.type-case__cut {
+  margin: 0 0 0.7rem;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.6rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #6b655c;
-  border-bottom: 1px solid rgba(27, 23, 20, 0.28);
-  padding-bottom: 0.5rem;
 }
-.spec-card__title {
-  font-family: 'Playfair Display', serif;
-  font-weight: 900;
-  font-size: 1.65rem;
-  line-height: 1.02;
-  margin: 0.7rem 0 0.15rem;
-  color: #1b1714;
-}
-.spec-card__tag {
+.type-case__line {
+  margin: 0;
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
-  font-size: 1.1rem;
-  color: #5a544a;
-  margin: 0 0 0.8rem;
-}
-.spec-card__net {
-  font-size: 0.58rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #6b655c;
-  margin: 0 0 0.7rem;
-}
-.spec-card__facts {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  margin: 0 0 0.8rem;
-  border-top: 1px solid rgba(27, 23, 20, 0.22);
-  border-bottom: 1px solid rgba(27, 23, 20, 0.22);
-  padding: 0.6rem 0;
-}
-.spec-card__fact {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.72rem;
-}
-.spec-card__fact dt {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 1.14rem;
+  line-height: 1.45;
   color: #3a352c;
 }
-.spec-card__fact dd {
-  margin: 0;
-  font-weight: 700;
-  color: #1b1714;
-  font-variant-numeric: tabular-nums;
+
+/* The proof: real correction marks, in the one velvet ink. */
+.proof-line del {
+  color: rgba(27, 23, 20, 0.42);
+  text-decoration: line-through;
+  text-decoration-color: var(--wax-plum);
+  text-decoration-thickness: 0.07em;
 }
-.spec-card__ing {
-  font-size: 0.72rem;
-  line-height: 1.5;
-  color: #3a352c;
-  margin: 0 0 0.5rem;
-}
-.spec-card__ing strong {
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.spec-card__note {
-  font-size: 0.66rem;
-  font-style: italic;
-  color: #6b655c;
-  margin: 0 0 0.9rem;
-}
-.spec-card__foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.spec-card__stamp {
-  border: 2px solid var(--wax-plum);
+.proof-line ins {
   color: var(--wax-plum);
-  font-size: 0.58rem;
-  letter-spacing: 0.22em;
+  font-style: italic;
+  text-decoration: none;
+}
+/* Caret ("insert here"), set inline so it sits on the baseline ahead of the word. */
+.proof-line ins::before {
+  content: '‸';
+  margin-right: 0.06em;
+  font-size: 0.62em;
+  font-style: normal;
+}
+.proof-note {
+  display: inline-block;
+  margin-left: 1rem;
+  padding: 0.05rem 0.7rem 0.15rem;
+  border: 1.5px solid var(--wax-plum);
+  border-radius: 999px;
+  color: var(--wax-plum);
+  font-style: italic;
+  font-size: 1.05rem;
+  transform: rotate(-6deg);
+}
+.proof-stages {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.proof-stage {
+  min-width: 0;
+  padding-top: 1.1rem;
+  border-top: 2px solid #1b1714;
+}
+.proof-stage__mark {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: var(--brass-deep);
+}
+.proof-stage__name {
+  margin: 0.3rem 0 0.5rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+.proof-stage__body {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.12rem;
+  line-height: 1.55;
+  color: #3a352c;
+}
+
+/* The run: the closing sheet, back on the dark of the press room. */
+.press-run {
+  margin-top: clamp(4.5rem, 3rem + 7vw, 9rem);
+  padding: clamp(4.5rem, 3rem + 6vw, 8rem) clamp(2.25rem, 5vw, 4rem);
+  text-align: center;
+  color: #f5efe6;
+  background: var(--pine);
+}
+.press-run__heading {
+  max-width: 22ch;
+  margin: 0 auto;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.9rem, 1rem + 4.1vw, 3.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
-  padding: 0.22rem 0.7rem;
+  text-wrap: balance;
+}
+.press-run__body {
+  max-width: 46ch;
+  margin: 1.6rem auto 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.55;
+  color: rgba(245, 239, 230, 0.78);
+}
+.press-run__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  margin-top: 2.6rem;
+}
+
+/* Buttons are sorts: blocks of metal that go down when pressed. */
+.sort-btn {
+  display: inline-block;
+  padding: 0.95rem 1.7rem;
   border-radius: 3px;
-  transform: rotate(-5deg);
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #1b1714;
+  background: linear-gradient(180deg, #d8c08a 0%, #b7935a 55%, #a3814c 100%);
+  box-shadow:
+    0 5px 0 #6f5529,
+    0 10px 18px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition: transform 90ms ease, box-shadow 90ms ease;
+}
+.sort-btn:hover {
+  transform: translateY(1px);
+  box-shadow:
+    0 4px 0 #6f5529,
+    0 8px 14px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.sort-btn:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 0 0 #6f5529,
+    0 2px 5px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.sort-btn:focus-visible {
+  outline: 2px solid #f5efe6;
+  outline-offset: 5px;
+}
+/* A lead sort, for the secondary action. */
+.sort-btn--lead {
+  color: #f5efe6;
+  background: linear-gradient(180deg, #8d8a80 0%, #6c6960 55%, #5a574f 100%);
+  box-shadow:
+    0 5px 0 #37352f,
+    0 10px 18px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.sort-btn--lead:hover {
+  box-shadow:
+    0 4px 0 #37352f,
+    0 8px 14px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.sort-btn--lead:active {
+  box-shadow:
+    0 0 0 #37352f,
+    0 2px 5px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Brass accents + CTA buttons for the boxed home (velvet-plum stays the pinch). */
-.boxed-accent { color: var(--brass); }
-.boxed-btn {
-  background: var(--brass);
-  color: #10231a;
-  transition: background var(--duration-fast) ease, transform var(--duration-fast) ease;
+.press-colophon {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 4.5rem 2.25rem 5rem;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.14rem;
+  line-height: 1.6;
+  color: #4a443c;
 }
-.boxed-btn:hover { background: var(--brass-bright); }
-.boxed-btn-ghost {
-  border: 1px solid rgba(183, 147, 90, 0.6);
-  color: var(--brass);
-  transition: background var(--duration-fast) ease;
-}
-.boxed-btn-ghost:hover { background: rgba(183, 147, 90, 0.12); }
+.press-colophon p { margin: 0; }
+.press-colophon a { color: var(--wax-plum); }
 
-/* Phones: tighten the spec card so the parcel still shows above it. (Kept after
-   the base .spec-card rules so these win at equal specificity.) */
+@media (min-width: 768px) {
+  .type-case__cell.md\:col-span-2 { grid-column: span 2; }
+  .type-case__cell.md\:col-span-3 { grid-column: span 3; }
+  .type-case__cell.md\:col-span-6 { grid-column: span 6; }
+  .proof-stages { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
 @media (max-width: 640px) {
-  .spec-card {
-    padding: 1.05rem 1.15rem 1rem;
-  }
-  .spec-card__title {
-    font-size: 1.4rem;
-  }
-  .spec-card__facts {
-    padding: 0.45rem 0;
-    margin-bottom: 0.6rem;
-  }
-  .spec-card__fact {
-    font-size: 0.68rem;
-  }
+  .crop--tl, .crop--tr { top: 68px; }
+  .crop--tl, .crop--bl { left: 8px; }
+  .crop--tr, .crop--br { right: 8px; }
+  .colour-bar { left: 8px; }
+  .colour-bar span { width: 6px; height: 14px; }
+  /* On phones the counter would sit on top of reading text; the colour bar
+     already shows progress. */
+  .impression { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-copy__lockup, .press-copy__scrim, .type-case__cell, .sort-btn { transition: none; }
 }
