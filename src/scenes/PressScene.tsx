@@ -41,6 +41,8 @@ const SHEET_START = new Vector3(0, 1.7, -7);
 const SHEET_DOWN = new Vector3(0, TYPE_HIGH + FACE + 0.03, 0);
 const SHEET_UP = new Vector3(0, 2.6, 0.5);
 const FORME_FOCUS = new Vector3(0, TYPE_HIGH + FACE, -0.85);
+/** Screen pixels the lifted sheet's top edge keeps clear: the fixed nav, plus a hair of paper. */
+const MASTHEAD_CLEAR_PX = 96;
 
 type Sort = { x: number; z: number; w: number; h: number };
 
@@ -134,6 +136,7 @@ function usePrintTexture() {
 export function PressScene({ reducedMotion }: Props) {
   const camera = useThree((s) => s.camera);
   const aspect = useThree((s) => s.size.width / s.size.height);
+  const height = useThree((s) => s.size.height);
   const sheet = useRef<Group>(null);
   const turn = useRef<Group>(null);
   const print = usePrintTexture();
@@ -146,13 +149,20 @@ export function PressScene({ reducedMotion }: Props) {
   }, [bench]);
 
   const scratch = useMemo(
-    () => ({ pos: new Vector3(), look: new Vector3(), dir: new Vector3(), end: new Vector3() }),
+    () => ({
+      pos: new Vector3(),
+      look: new Vector3(),
+      dir: new Vector3(),
+      end: new Vector3(),
+      edge: new Vector3(),
+      probe: new Vector3(),
+    }),
     [],
   );
 
   useFrame(() => {
     const p = reducedMotion ? STATIC_PROGRESS : press.progress;
-    const { pos, look, dir, end } = scratch;
+    const { pos, look, dir, end, edge, probe } = scratch;
 
     const rise = seg(p, BEATS.rise[0], BEATS.rise[1]);
     pos.lerpVectors(CAM_MACRO, CAM_TOP, rise);
@@ -178,6 +188,23 @@ export function PressScene({ reducedMotion }: Props) {
     if (fill > 0) at.lerpVectors(SHEET_UP, end, fill);
     else if (pull > 0) at.lerpVectors(SHEET_DOWN, SHEET_UP, pull);
     else at.lerpVectors(SHEET_START, SHEET_DOWN, lay);
+
+    // The lifted sheet is taller than the frame on wide, short screens, and its
+    // masthead would run under the nav. Project the top edge and slide the sheet
+    // down-screen (+z, in the plane of the sheet) until the masthead clears.
+    // Two Newton steps are plenty; the shift ramps in with the pull so it never jumps.
+    if (pull > 0) {
+      camera.updateMatrixWorld();
+      const limit = 1 - (2 * MASTHEAD_CLEAR_PX) / height;
+      for (let i = 0; i < 2; i++) {
+        edge.set(at.x, at.y, at.z - SHEET_H / 2).project(camera);
+        if (edge.y <= limit) break;
+        probe.set(at.x, at.y, at.z - SHEET_H / 2 + 1).project(camera);
+        const perUnit = edge.y - probe.y; // screen drop per +1 world z at the sheet
+        if (perUnit <= 1e-4) break;
+        at.z += ((edge.y - limit) / perUnit) * pull;
+      }
+    }
 
     turn.current.rotation.y = Math.PI * (1 - pull); // blank side up → printed side up
     pressFocus.lerpVectors(FORME_FOCUS, at, pull);
