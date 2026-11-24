@@ -12,16 +12,14 @@ import { dirname, resolve } from 'node:path';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const r = (p) => resolve(root, p);
 
-// Brand faces the card actually uses. Normal weights are the runtime woffs in
-// public/fonts; the two italic lines (eyebrow + gold tagline) pull italic faces
-// from the installed @fontsource package — build-time only, nothing extra ships.
+// Brand faces the card actually uses: the headline weight ships in public/fonts;
+// the proof-line italic (Cormorant) and folio grotesk (Archivo) come from the
+// installed @fontsource packages — build-time only, nothing extra ships.
 const fontFiles = [
   'public/fonts/PlayfairDisplay-900.woff',
-  'public/fonts/PlayfairDisplay-700.woff',
-  'public/fonts/Outfit-400.woff',
-  'public/fonts/Outfit-500.woff',
-  'node_modules/@fontsource/playfair-display/files/playfair-display-latin-400-italic.woff',
-  'node_modules/@fontsource/playfair-display/files/playfair-display-latin-700-italic.woff',
+  'node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-italic.woff',
+  'node_modules/@fontsource/archivo/files/archivo-latin-500-normal.woff',
+  'node_modules/@fontsource/archivo/files/archivo-latin-600-normal.woff',
 ]
   .map(r)
   .filter((f) => {

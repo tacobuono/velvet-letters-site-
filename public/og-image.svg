@@ -1,19 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Velvet Letters — Cinematic Websites">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Velvet Letters — a proof sheet reading: We set your brand in type.">
+  <!-- The Press: a first proof pulled on bone stock, sitting on the pine bench.
+       Register marks in the margin, folios in brass, one plum correction. -->
   <defs>
-    <radialGradient id="bg" cx="50%" cy="38%" r="75%">
-      <stop offset="0%" stop-color="#5c1a4a"/>
-      <stop offset="55%" stop-color="#3a0a2e"/>
-      <stop offset="100%" stop-color="#1a0515"/>
-    </radialGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#f0c755"/>
-      <stop offset="100%" stop-color="#a6802f"/>
-    </linearGradient>
+    <!-- Dot grain on the paper, same idea as .paper in paper.css -->
+    <pattern id="grain" width="4" height="4" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.55" fill="#1b1714" fill-opacity="0.07"/>
+    </pattern>
+    <filter id="lift" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#05100a" flood-opacity="0.55"/>
+    </filter>
+    <!-- A register mark: ring and cross, as on the make-ready sheet -->
+    <g id="reg">
+      <circle r="9" fill="none" stroke="#b7935a" stroke-width="1.4"/>
+      <path d="M-15 0H15M0-15V15" stroke="#b7935a" stroke-width="1.4"/>
+    </g>
   </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <text x="600" y="150" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="42" font-style="italic" fill="url(#gold)" letter-spacing="14">VELVET LETTERS</text>
-  <text x="600" y="312" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="900" font-size="92" fill="#f5efe6">Cinematic websites</text>
-  <text x="600" y="404" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-style="italic" font-weight="700" font-size="78" fill="url(#gold)">people feel &amp; remember.</text>
-  <text x="600" y="500" text-anchor="middle" font-family="Outfit, Arial, sans-serif" font-size="28" fill="#e8d5a3" letter-spacing="2">Immersive · 3D · Storytelling · SEO/GEO · Conversion</text>
-  <circle cx="600" cy="566" r="6" fill="url(#gold)"/>
+
+  <!-- Bench -->
+  <rect width="1200" height="630" fill="#0f1c15"/>
+  <rect width="1200" height="630" fill="#0a1410" fill-opacity="0.45"/>
+
+  <!-- Register marks in the trim margin -->
+  <use href="#reg" x="36" y="32"/>
+  <use href="#reg" x="1164" y="32"/>
+  <use href="#reg" x="36" y="598"/>
+  <use href="#reg" x="1164" y="598"/>
+
+  <!-- Edition folio, set in the bottom margin -->
+  <text x="600" y="608" text-anchor="middle" font-family="Archivo, Outfit, Arial, sans-serif" font-weight="600" font-size="12" letter-spacing="5" fill="#b7935a">FIRST PROOF · EDITION 0001 / 0500</text>
+
+  <!-- The sheet -->
+  <g filter="url(#lift)">
+    <rect x="72" y="64" width="1056" height="502" fill="#f2ebdf"/>
+  </g>
+  <rect x="72" y="64" width="1056" height="502" fill="url(#grain)"/>
+
+  <!-- Imprint rule -->
+  <text x="128" y="126" font-family="Archivo, Outfit, Arial, sans-serif" font-weight="600" font-size="14" letter-spacing="4" fill="#8a6a38">VELVET LETTERS · PRESS &amp; FOUNDRY</text>
+  <text x="1072" y="126" text-anchor="end" font-family="Archivo, Outfit, Arial, sans-serif" font-weight="600" font-size="14" letter-spacing="4" fill="#8a6a38">CINEMATIC WEBSITES · SET BY HAND</text>
+  <path d="M128 142H1072" stroke="#1b1714" stroke-opacity="0.28" stroke-width="1"/>
+
+  <!-- Headline, as pulled on the home page -->
+  <text x="124" y="268" font-family="Playfair Display, Georgia, serif" font-weight="900" font-size="94" fill="#1b1714" letter-spacing="-1">We set your brand</text>
+  <text x="124" y="372" font-family="Playfair Display, Georgia, serif" font-weight="900" font-size="94" fill="#1b1714" letter-spacing="-1">in type.</text>
+
+  <!-- Proof line: the one correction, marked in plum -->
+  <text x="128" y="448" font-family="Cormorant Garamond, Georgia, serif" font-style="italic" font-size="44" fill="#1b1714">Websites people <tspan fill="#1b1714" fill-opacity="0.5">visit</tspan> <tspan fill="#6e2140">remember.</tspan></text>
+  <!-- resvg does not paint text-decoration, so the strike and the insertion caret are drawn -->
+  <path d="M451 436H537" stroke="#6e2140" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M538 458l5.5-8 5.5 8" fill="none" stroke="#6e2140" stroke-width="1.8" stroke-linejoin="round"/>
+
+  <!-- Imprimatur: the seal from the About page, stamped on the proof -->
+  <g transform="translate(940 345) rotate(-9)" opacity="0.92">
+    <circle r="66" fill="none" stroke="#6e2140" stroke-width="2"/>
+    <circle r="40" fill="none" stroke="#6e2140" stroke-width="1" stroke-dasharray="1 4"/>
+    <path id="sealArc" d="M-53 0a53 53 0 1 1 106 0a53 53 0 1 1-106 0" fill="none"/>
+    <text font-family="Archivo, Outfit, Arial, sans-serif" font-weight="600" font-size="11" letter-spacing="3" fill="#6e2140">
+      <textPath href="#sealArc" startOffset="0">IMPRIMATUR · LET IT BE PRINTED · VL · </textPath>
+    </text>
+    <text y="15" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="900" font-size="42" fill="#6e2140">VL</text>
+  </g>
+
+  <!-- Colophon -->
+  <path d="M128 492H1072" stroke="#1b1714" stroke-opacity="0.28" stroke-width="1"/>
+  <text x="128" y="526" font-family="Archivo, Outfit, Arial, sans-serif" font-weight="500" font-size="14" letter-spacing="2" fill="#1b1714" fill-opacity="0.72">Set in type. Pulled clean. Made to be kept.</text>
+  <text x="1072" y="526" text-anchor="end" font-family="Archivo, Outfit, Arial, sans-serif" font-weight="600" font-size="14" letter-spacing="2" fill="#8a6a38">velvetletters.com</text>
 </svg>
