@@ -39,17 +39,17 @@ export function AboutPage() {
   const ref = useReveal<HTMLDivElement>();
 
   return (
-    <div ref={ref} className="paper-grain bg-paper text-ink">
+    <div ref={ref} className="paper-grain bg-bone text-ink">
       {/* Masthead */}
       <header className="mx-auto max-w-[1400px] px-6 pb-16 pt-32 sm:px-10 sm:pt-40">
         <div className="flex flex-wrap items-end justify-between gap-6 border-b-2 border-ink pb-6" data-reveal>
-          <p className="font-ui text-[0.7rem] uppercase tracking-[0.4em] text-acid-deep">Atelier Archive · Edition MMXXV</p>
-          <p className="font-ui text-[0.7rem] uppercase tracking-[0.3em] opacity-60">No. 001 — {SITE_URL.replace('https://', '')}</p>
+          <p className="font-grotesk text-[0.7rem] uppercase tracking-[0.4em] text-brass-deep">Atelier Archive · Edition MMXXV</p>
+          <p className="font-grotesk text-[0.7rem] uppercase tracking-[0.3em] opacity-60">No. 001 — {SITE_URL.replace('https://', '')}</p>
         </div>
         <h1 className="mt-10 font-display text-[clamp(2.6rem,8vw,7rem)] font-black leading-[0.95]" data-reveal>
           The Velvet Letters
           <br />
-          <span className="italic text-acid-deep">Catalogue</span> of Digital Impressions
+          <span className="italic text-brass-deep">Catalogue</span> of Digital Impressions
         </h1>
         <p className="mt-8 max-w-2xl font-editorial text-2xl leading-relaxed opacity-80" data-reveal>
           We are Velvet Letters Studio, a maker of cinematic websites. We do not make ordinary pages.
@@ -59,14 +59,14 @@ export function AboutPage() {
 
       {/* What we believe — label cards */}
       <section className="mx-auto max-w-[1400px] px-6 py-16 sm:px-10">
-        <h2 className="mb-10 font-ui text-[0.8rem] uppercase tracking-[0.4em] text-acid-deep" data-reveal>
+        <h2 className="mb-10 font-grotesk text-[0.8rem] uppercase tracking-[0.4em] text-brass-deep" data-reveal>
           § What we believe
         </h2>
         <div className="grid gap-6 md:grid-cols-2">
           {BELIEFS.map((b) => (
             <article key={b.code} className="label-card" data-reveal>
               <div className="flex items-center justify-between border-b border-dashed border-ink/30 pb-3">
-                <span className="font-ui text-[0.7rem] uppercase tracking-[0.3em] opacity-60">{b.code}</span>
+                <span className="font-grotesk text-[0.7rem] uppercase tracking-[0.3em] opacity-60">{b.code}</span>
                 <span className="barcode" aria-hidden />
               </div>
               <h3 className="mt-4 font-display text-2xl font-bold">{b.title}</h3>
@@ -78,13 +78,13 @@ export function AboutPage() {
 
       {/* What we make — catalogue list */}
       <section className="mx-auto max-w-[1400px] px-6 py-16 sm:px-10">
-        <h2 className="mb-10 font-ui text-[0.8rem] uppercase tracking-[0.4em] text-acid-deep" data-reveal>
+        <h2 className="mb-10 font-grotesk text-[0.8rem] uppercase tracking-[0.4em] text-brass-deep" data-reveal>
           § What we make
         </h2>
         <ul className="divide-y divide-ink/15 border-y-2 border-ink">
           {PRODUCTS.map((p) => (
             <li key={p.sku} className="grid grid-cols-[auto_1fr] items-baseline gap-x-6 py-5 sm:grid-cols-[7rem_1fr_auto]" data-reveal>
-              <span className="font-ui text-[0.75rem] uppercase tracking-[0.2em] text-acid-deep">{p.sku}</span>
+              <span className="font-grotesk text-[0.75rem] uppercase tracking-[0.2em] text-brass-deep">{p.sku}</span>
               <span className="font-display text-xl font-bold sm:text-2xl">{p.name}</span>
               <span className="col-span-2 font-editorial text-lg opacity-70 sm:col-span-1 sm:text-right">{p.note}</span>
             </li>
@@ -94,7 +94,7 @@ export function AboutPage() {
 
       {/* What makes it different — receipt */}
       <section className="mx-auto max-w-[1400px] px-6 py-16 sm:px-10">
-        <h2 className="mb-10 font-ui text-[0.8rem] uppercase tracking-[0.4em] text-acid-deep" data-reveal>
+        <h2 className="mb-10 font-grotesk text-[0.8rem] uppercase tracking-[0.4em] text-brass-deep" data-reveal>
           § What makes it different
         </h2>
         <div className="grid gap-10 md:grid-cols-[1fr_22rem]">
@@ -105,10 +105,10 @@ export function AboutPage() {
             come back to.
           </p>
           <aside className="receipt" data-reveal>
-            <p className="text-center font-ui text-[0.7rem] uppercase tracking-[0.3em]">Velvet Letters · Receipt</p>
+            <p className="text-center font-grotesk text-[0.7rem] uppercase tracking-[0.3em]">Velvet Letters · Receipt</p>
             <div className="my-3 border-t border-dashed border-ink/40" />
             {['Strategy', 'Art direction', '3D / motion', 'SEO / GEO', 'Conversion'].map((r) => (
-              <div key={r} className="flex justify-between py-1 font-ui text-sm">
+              <div key={r} className="flex justify-between py-1 font-grotesk text-sm">
                 <span>{r}</span>
                 <span>✓ included</span>
               </div>
@@ -124,12 +124,12 @@ export function AboutPage() {
 
       {/* The ingredients — barcode list */}
       <section className="mx-auto max-w-[1400px] px-6 py-16 sm:px-10">
-        <h2 className="mb-10 font-ui text-[0.8rem] uppercase tracking-[0.4em] text-acid-deep" data-reveal>
+        <h2 className="mb-10 font-grotesk text-[0.8rem] uppercase tracking-[0.4em] text-brass-deep" data-reveal>
           § The ingredients
         </h2>
         <div className="flex flex-wrap gap-3" data-reveal>
           {INGREDIENTS.map((i) => (
-            <span key={i} className="rounded-full border border-ink/40 px-5 py-2 font-ui text-sm uppercase tracking-[0.12em]">
+            <span key={i} className="rounded-full border border-ink/40 px-5 py-2 font-grotesk text-sm uppercase tracking-[0.12em]">
               {i}
             </span>
           ))}

@@ -37,7 +37,7 @@ export function Cursor() {
       aria-hidden
       className="pointer-events-none fixed left-0 top-0 z-[2] h-[300px] w-[300px] rounded-full opacity-0 transition-opacity duration-500"
       style={{
-        background: 'radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(183,147,90,0.08) 0%, transparent 70%)',
       }}
     />
   );

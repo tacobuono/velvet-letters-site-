@@ -27,11 +27,21 @@ export default {
         meadow: '#5c1a4a', // plum link / active-nav on paper (was green #3f7d4e)
         'meadow-light': '#7a3a63', // lighter plum hover (was #7fb069)
         newsprint: '#fbf7ea',
+        // Redesign — "Website, Boxed": pine & brass dominant, velvet-plum as the pinch.
+        brass: '#b7935a',
+        'brass-bright': '#d8c08a',
+        'brass-deep': '#8a6a38',
+        pine: '#0f1c15',
+        'pine-deep': '#0a1410',
+        'pine-mid': '#16281e',
+        bone: '#f2ebdf',
+        wax: '#6e2140',
       },
       fontFamily: {
         display: ["'Playfair Display'", 'serif'],
         editorial: ["'Cormorant Garamond'", 'serif'],
         ui: ["'Outfit'", 'sans-serif'],
+        grotesk: ["'Archivo'", "'Outfit'", 'sans-serif'],
       },
     },
   },

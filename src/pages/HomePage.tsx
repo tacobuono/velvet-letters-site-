@@ -1,36 +1,67 @@
 import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
+import { ContactShadows } from '@react-three/drei';
 import { ACESFilmicToneMapping } from 'three';
 import { useReducedMotion } from '../lib/useReducedMotion';
 import { useDeviceTier } from '../lib/useDeviceTier';
-import type { DeviceTier } from '../lib/useDeviceTier';
 import { lenisScrollTo, resetScroll } from '../lib/useScrollProgress';
 import { useSeo, organizationLd, webPageLd } from '../lib/seo';
-import { CameraRig } from '../world/CameraRig';
-import { Lights } from '../world/Lights';
-import { Fog } from '../world/Fog';
-import { Particles } from '../world/Particles';
 import { StudioEnvironment } from '../world/StudioEnvironment';
-import { SiteArtboardScene } from '../scenes/SiteArtboardScene';
-import { ScrollOverlay } from '../components/ScrollOverlay';
+import { Backplate } from '../scenes/Backplate';
+import { BoxedParcel } from '../scenes/BoxedParcel';
+import { BoxedEffects } from '../scenes/BoxedEffects';
+import { BoxedOverlay } from '../components/BoxedOverlay';
 import { CanvasErrorBoundary } from '../components/CanvasErrorBoundary';
 import { isWebGLAvailable } from '../lib/webgl';
 
-function World({ reducedMotion, tier }: { reducedMotion: boolean; tier: DeviceTier }) {
+function World({ reducedMotion, effects }: { reducedMotion: boolean; effects: boolean }) {
   return (
     <>
-      <Fog />
-      <StudioEnvironment />
-      <Lights reducedMotion={reducedMotion} />
-      <Particles count={tier.particleCount} reducedMotion={reducedMotion} />
-      <CameraRig reducedMotion={reducedMotion} />
+      {/* Photoreal dark-studio set, deep behind the parcel (bokeh via DOF). */}
+      <Backplate />
 
-      {/* One persistent scene: the fictional client site assembling on its
-          artboard. No SceneGate cross-fades — the camera path IS the edit.
-          No postprocessing chain either: the look comes from photography +
-          lighting, and dropping the composer (render-to-texture + fullscreen
-          passes every frame) is the single biggest smoothness win. */}
-      <SiteArtboardScene reducedMotion={reducedMotion} />
+      {/* Procedural IBL for the metal + velvet reflections (no HDRI download). */}
+      <StudioEnvironment />
+
+      {/* Lighting matched to the photoreal backplate: a warm key from high
+          centre (the plate's spotlight), a cool rim from behind-left, and a
+          low warm fill from camera-right so the velvet face isn't dead black. */}
+      <ambientLight color="#15281e" intensity={0.22} />
+      <spotLight
+        color="#ffdca8"
+        intensity={270}
+        distance={34}
+        decay={2}
+        angle={0.58}
+        penumbra={1}
+        position={[0.6, 6.6, 3.4]}
+      />
+      {/* Cool emerald rim on both back edges — carves the parcel out of the pine set. */}
+      <pointLight color="#3f9f72" intensity={48} distance={26} decay={2} position={[-3.6, 2.8, -4]} />
+      <pointLight color="#4fae84" intensity={30} distance={24} decay={2} position={[3.6, 2.4, -3.6]} />
+      {/* Low brass fill from camera-right so the velvet face isn't dead black. */}
+      <pointLight color="#d8b070" intensity={14} distance={20} decay={2} position={[3.2, 1.2, 3]} />
+      {/* Soft warm front fill so the velvet face toward camera reads, not a silhouette. */}
+      <pointLight color="#ffe8cf" intensity={12} distance={18} decay={2} position={[0, 1.4, 5.2]} />
+
+      <BoxedParcel reducedMotion={reducedMotion} />
+
+      {/* Grounds the parcel in the plate's light pool. Baked once (frames={1}):
+          at this blur a turning box casts a near-constant soft blob, so
+          re-rendering the shadow map every frame bought nothing. */}
+      <ContactShadows
+        position={[0, -1.12, 0]}
+        opacity={0.62}
+        blur={2.6}
+        scale={9}
+        far={4.2}
+        resolution={256}
+        frames={1}
+        color="#000000"
+      />
+
+      {/* Cinematic grade — off for reduced-motion / low-tier devices. */}
+      <BoxedEffects enabled={effects} />
     </>
   );
 }
@@ -38,32 +69,30 @@ function World({ reducedMotion, tier }: { reducedMotion: boolean; tier: DeviceTi
 export function HomePage() {
   const reducedMotion = useReducedMotion();
   const tier = useDeviceTier();
-  // Check WebGL once. No support (or a context that later throws) → static DOM
-  // fallback instead of a white-screened app. The hero copy lives in
-  // ScrollOverlay (DOM), so the page stays usable without the 3D layer.
   const [webgl] = useState(isWebGLAvailable);
-  // DPR is a fixed cap (dpr={[1, tier.dprMax]} on the Canvas). Under frameloop
-  // "demand" there's no PerformanceMonitor ramp — the GPU sleeps at rest instead,
-  // which saves far more than shaving resolution ever did.
+  // The postprocessing composer does its own multisampling, so the canvas's
+  // built-in MSAA is switched off whenever the composer is on (never both).
+  const effects = !reducedMotion && tier.dprMax > 1;
 
-  // The journey only works if the visitor enters at the blank artboard (progress
-  // 0). The 1080vh scroll driver mounts with this lazy chunk — AFTER Lenis init —
-  // so a restored/native scroll position could otherwise drop you mid-journey (or
-  // at the CTA). Force the start once the tall content has laid out.
+  // Enter at the intro (progress 0): the tall scroll driver mounts with this lazy
+  // chunk after Lenis init, so a restored position could otherwise drop mid-journey.
   useEffect(() => {
     resetScroll();
+    let r2 = 0;
     const r1 = requestAnimationFrame(() => {
       resetScroll();
-      const r2 = requestAnimationFrame(() => resetScroll());
-      void r2;
+      r2 = requestAnimationFrame(() => resetScroll());
     });
-    return () => cancelAnimationFrame(r1);
+    return () => {
+      cancelAnimationFrame(r1);
+      cancelAnimationFrame(r2);
+    };
   }, []);
 
   useSeo({
     title: 'Velvet Letters — Cinematic Websites for Premium Brands',
     description:
-      'Velvet Letters builds cinematic, immersive, custom websites — 3D, storytelling, SEO/GEO and conversion strategy. We make people stop, feel, remember, and act.',
+      'Velvet Letters packages cinematic, immersive websites — design, motion, 3D, story, SEO and conversion — sealed and delivered. We make people stop, feel, remember, and act.',
     path: '/',
     jsonLd: [organizationLd, webPageLd('Velvet Letters', '/', 'Cinematic websites for premium brands.')],
   });
@@ -72,24 +101,24 @@ export function HomePage() {
 
   return (
     <>
-      <div className="fixed inset-0 z-0">
+      {/* Photoreal dark-studio backplate — the hyperreal set the parcel sits in. */}
+      <div className="boxed-plate" aria-hidden />
+
+      <div className="fixed inset-0 z-[1]">
         <CanvasErrorBoundary fallback={canvasFallback}>
           {webgl ? (
             <Canvas
-              frameloop="demand"
+              frameloop={reducedMotion ? 'demand' : 'always'}
               dpr={[1, tier.dprMax]}
-              gl={{ antialias: true, powerPreference: 'high-performance' }}
-              camera={{ position: [0, 1.2, 16], fov: 40, near: 0.1, far: 1000 }}
+              gl={{ antialias: !effects, alpha: true, powerPreference: 'high-performance' }}
+              camera={{ position: [0, 0.5, 6.2], fov: 36, near: 0.1, far: 1000 }}
               onCreated={({ gl }) => {
                 gl.toneMapping = ACESFilmicToneMapping;
-                gl.toneMappingExposure = 1.0;
-                // Beat 5 scrolls the fictional page inside its artboard frame via
-                // world-space clipping planes on the page materials.
-                gl.localClippingEnabled = true;
+                gl.toneMappingExposure = 1.05;
               }}
             >
               <Suspense fallback={null}>
-                <World reducedMotion={reducedMotion} tier={tier} />
+                <World reducedMotion={reducedMotion} effects={effects} />
               </Suspense>
             </Canvas>
           ) : (
@@ -98,7 +127,7 @@ export function HomePage() {
         </CanvasErrorBoundary>
       </div>
 
-      <ScrollOverlay scrollTo={(id) => lenisScrollTo(`#${id}`)} />
+      <BoxedOverlay scrollTo={(id) => lenisScrollTo(`#${id}`)} />
     </>
   );
 }

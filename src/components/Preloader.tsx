@@ -8,7 +8,7 @@ const MAX_MS = 5000;
 const POLL_MS = 120;
 
 /**
- * Brand-matched loader: breathing VL monogram + sliding gold bar.
+ * Brand-matched loader: breathing VL monogram + sliding brass bar.
  *
  * Dismissal is tied to real asset loading via drei's useProgress (fonts,
  * textures, environment) rather than a blind timer: after a minimum brand beat
@@ -42,13 +42,13 @@ export function Preloader() {
   return (
     <div
       aria-hidden
-      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-velvet-deep transition-[opacity,visibility] duration-700 ${
+      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-pine-deep transition-[opacity,visibility] duration-700 ${
         hidden ? 'pointer-events-none invisible opacity-0' : ''
       }`}
     >
-      <div className="font-display text-6xl font-black tracking-[0.3em] text-gold preloader-breathe">VL</div>
-      <div className="mt-8 h-px w-52 overflow-hidden bg-gold/20">
-        <div className="h-full w-full bg-gold preloader-slide" />
+      <div className="font-display text-6xl font-black tracking-[0.3em] text-brass preloader-breathe">VL</div>
+      <div className="mt-8 h-px w-52 overflow-hidden bg-brass/20">
+        <div className="h-full w-full bg-brass preloader-slide" />
       </div>
     </div>
   );

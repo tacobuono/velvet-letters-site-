@@ -97,18 +97,18 @@ export function ProcessPage() {
   }, []);
 
   return (
-    <div className="bg-velvet-deep text-cream">
+    <div className="bg-pine-deep text-cream">
       {/* Hero — over the shoulder */}
       <header className="relative flex min-h-[88vh] flex-col items-center justify-center overflow-hidden px-6 text-center">
         <div className="shoulder" aria-hidden />
         <div className="screen-glow" aria-hidden />
-        <p className="relative z-10 font-ui text-[0.7rem] uppercase tracking-[0.45em] text-gold">The Velvet Letters Process</p>
+        <p className="relative z-10 font-grotesk text-[0.7rem] uppercase tracking-[0.45em] text-brass">The Velvet Letters Process</p>
         <h1 className="relative z-10 mt-6 font-display text-[clamp(3rem,9vw,8rem)] font-black leading-[0.92]">
           The screen
           <br />
-          <span className="italic text-gold">becomes real.</span>
+          <span className="italic text-brass">becomes real.</span>
         </h1>
-        <p className="relative z-10 mt-8 max-w-xl font-editorial text-2xl leading-relaxed text-gold-light">
+        <p className="relative z-10 mt-8 max-w-xl font-editorial text-2xl leading-relaxed text-brass-bright">
           Sit beside us. From a blank, pixelated rectangle to a cinematic site people move toward — this is
           how the impression gets made.
         </p>
@@ -120,7 +120,7 @@ export function ProcessPage() {
           <div className="monitor">
             <StageScreen stage={active} />
             <div className="monitor-stand" aria-hidden />
-            <p className="mt-4 text-center font-ui text-[0.7rem] uppercase tracking-[0.3em] text-gold/85">
+            <p className="mt-4 text-center font-grotesk text-[0.7rem] uppercase tracking-[0.3em] text-brass/85">
               Stage {STAGES[active].n} — {STAGES[active].title}
             </p>
           </div>
@@ -135,13 +135,13 @@ export function ProcessPage() {
                 stageRefs.current[i] = el;
               }}
               className={`flex min-h-[70vh] flex-col justify-center border-l-2 py-10 pl-8 transition-colors duration-500 ${
-                active === i ? 'border-gold' : 'border-gold/15'
+                active === i ? 'border-brass' : 'border-brass/15'
               }`}
             >
-              <span className="font-display text-5xl font-black text-gold/60">{s.n}</span>
+              <span className="font-display text-5xl font-black text-brass/60">{s.n}</span>
               <h2 className="mt-3 font-display text-[clamp(2rem,4vw,3.4rem)] font-bold">{s.title}</h2>
               <p className="mt-4 max-w-md font-editorial text-xl leading-relaxed text-cream/80">{s.lead}</p>
-              <p className="mt-4 max-w-md font-ui text-[0.8rem] uppercase tracking-[0.18em] text-gold">
+              <p className="mt-4 max-w-md font-grotesk text-[0.8rem] uppercase tracking-[0.18em] text-brass">
                 → {s.outcome}
               </p>
               {i === STAGES.length - 1 && (
@@ -158,10 +158,10 @@ export function ProcessPage() {
 
       {/* What we build */}
       <section className="mx-auto max-w-[1500px] px-6 py-20 sm:px-10">
-        <h2 className="font-ui text-[0.8rem] uppercase tracking-[0.4em] text-gold">What we build</h2>
-        <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-gold/15 bg-gold/15 sm:grid-cols-2 lg:grid-cols-4">
+        <h2 className="font-grotesk text-[0.8rem] uppercase tracking-[0.4em] text-brass">What we build</h2>
+        <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-brass/15 bg-brass/15 sm:grid-cols-2 lg:grid-cols-4">
           {TYPES.map((t) => (
-            <div key={t} className="bg-velvet px-6 py-8 font-display text-xl font-bold text-cream">
+            <div key={t} className="bg-pine-midpx-6 py-8 font-display text-xl font-bold text-cream">
               {t}
             </div>
           ))}

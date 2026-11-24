@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import gsap from 'gsap';
 
-/** Which choreography to play. `full` = velvet curtain + gold wax seal at full
+/** Which choreography to play. `full` = pine curtain + velvet-plum wax seal at full
  *  duration (first navigation of the session). `fast` = curtain only, no seal,
  *  ~60% duration — so rapid repeat navigation never feels like a loading screen. */
 export type TransitionVariant = 'full' | 'fast';
@@ -28,8 +28,8 @@ const REVEAL = 0.62;
 const FAST_SCALE = 0.6;
 
 /**
- * Site-wide branded page transition. A velvet curtain falls to cover the screen;
- * on the first navigation a gold "VL" wax seal presses in at center; the route
+ * Site-wide branded page transition. A pine curtain falls to cover the screen;
+ * on the first navigation a velvet-plum "VL" wax seal presses in at center; the route
  * swaps while covered; the curtain lifts away to reveal the new page. Subsequent
  * navigations use a faster, seal-less curtain wipe. Honors prefers-reduced-motion
  * with a plain cross-fade.
@@ -144,14 +144,15 @@ export const PageTransition = forwardRef<PageTransitionHandle>(function PageTran
       <div ref={sealRef} className="vt-seal">
         <svg viewBox="0 0 120 120" width="100%" height="100%" role="img" aria-label="Velvet Letters">
           <defs>
-            <radialGradient id="vtGold" cx="38%" cy="30%" r="78%">
-              <stop offset="0%" stopColor="#f0c755" />
-              <stop offset="55%" stopColor="#c9a84c" />
-              <stop offset="100%" stopColor="#8a6f2c" />
+            {/* Velvet-plum wax — the one pinch of velvet in the pine curtain. */}
+            <radialGradient id="vtWax" cx="38%" cy="30%" r="78%">
+              <stop offset="0%" stopColor="#a8456c" />
+              <stop offset="55%" stopColor="#7a2447" />
+              <stop offset="100%" stopColor="#4a1229" />
             </radialGradient>
           </defs>
-          <circle cx="60" cy="60" r="52" fill="url(#vtGold)" />
-          <circle cx="60" cy="60" r="46" fill="none" stroke="#1a0515" strokeOpacity="0.32" strokeWidth="1.5" />
+          <circle cx="60" cy="60" r="52" fill="url(#vtWax)" />
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#d8c08a" strokeOpacity="0.55" strokeWidth="1.5" />
           <text
             x="60"
             y="63"
@@ -160,8 +161,8 @@ export const PageTransition = forwardRef<PageTransitionHandle>(function PageTran
             fontFamily="'Playfair Display', serif"
             fontWeight="900"
             fontSize="44"
-            fill="#1a0515"
-            fillOpacity="0.82"
+            fill="#d8c08a"
+            fillOpacity="0.92"
           >
             VL
           </text>

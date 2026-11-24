@@ -47,20 +47,20 @@ export function ContactPage() {
     setSent(true);
   }
 
-  const field = 'w-full rounded-md border-2 border-ink/30 bg-white/60 px-4 py-3 font-ui text-ink outline-none focus:border-meadow';
-  const label = 'mb-1 block font-ui text-[0.72rem] uppercase tracking-[0.18em] text-ink/70';
+  const field = 'w-full rounded-md border-2 border-ink/30 bg-white/60 px-4 py-3 font-grotesk text-ink outline-none focus:border-wax';
+  const label = 'mb-1 block font-grotesk text-[0.72rem] uppercase tracking-[0.18em] text-ink/70';
 
   return (
-    <div className="halftone bg-newsprint text-ink">
+    <div className="halftone bg-bone text-ink">
       {/* Masthead */}
       <header className="mx-auto max-w-[1500px] px-6 pt-28 sm:px-10 sm:pt-36">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-y-2 border-ink py-2 font-ui text-[0.7rem] uppercase tracking-[0.25em]" data-reveal>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-y-2 border-ink py-2 font-grotesk text-[0.7rem] uppercase tracking-[0.25em]" data-reveal>
           <span>The Velvet Letters Classifieds</span>
           <span>Sunny edition · Open for projects</span>
         </div>
 
         <div className="py-10 text-center">
-          <p className="font-ui text-[0.72rem] uppercase tracking-[0.4em] text-meadow">Wanted: brave brands</p>
+          <p className="font-grotesk text-[0.72rem] uppercase tracking-[0.4em] text-wax">Wanted: brave brands</p>
           <h1 className="lets-talk mt-4" aria-label="Let's talk">
             <span>LET&rsquo;S</span>
             <span>TALK</span>
@@ -83,11 +83,11 @@ export function ContactPage() {
           </p>
 
           {sent ? (
-            <div className="mt-8 rounded-lg border-2 border-meadow bg-meadow-light/20 p-8" role="status">
-              <p className="font-display text-2xl font-bold text-meadow">Your letter is on its way.</p>
+            <div className="mt-8 rounded-lg border-2 border-wax bg-wax/20 p-8" role="status">
+              <p className="font-display text-2xl font-bold text-wax">Your letter is on its way.</p>
               <p className="mt-2 font-editorial text-lg text-ink/80">
                 If your mail app didn’t open, email us directly at{' '}
-                <a className="text-meadow underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+                <a className="text-wax underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
               </p>
             </div>
           ) : (
@@ -138,12 +138,12 @@ export function ContactPage() {
               </div>
               <button
                 type="submit"
-                className="w-fit rounded-full bg-ink px-9 py-4 font-ui text-[0.8rem] uppercase tracking-[0.22em] text-sun transition-transform hover:-translate-y-0.5"
+                className="w-fit rounded-full bg-ink px-9 py-4 font-grotesk text-[0.8rem] uppercase tracking-[0.22em] text-brass transition-transform hover:-translate-y-0.5"
               >
                 Send the first letter
               </button>
-              <p className="font-ui text-sm text-ink/60">
-                Prefer email? <a className="text-meadow underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+              <p className="font-grotesk text-sm text-ink/60">
+                Prefer email? <a className="text-wax underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
               </p>
             </form>
           )}
@@ -156,13 +156,13 @@ export function ContactPage() {
             <dl className="mt-4 space-y-4">
               {FAQS.map((f) => (
                 <div key={f.q}>
-                  <dt className="font-ui text-sm font-semibold uppercase tracking-[0.1em]">{f.q}</dt>
+                  <dt className="font-grotesk text-sm font-semibold uppercase tracking-[0.1em]">{f.q}</dt>
                   <dd className="mt-1 font-editorial text-lg text-ink/80">{f.a}</dd>
                 </div>
               ))}
             </dl>
           </div>
-          <div className="rounded-lg bg-sun p-6">
+          <div className="rounded-lg bg-brass p-6">
             <p className="font-display text-2xl font-bold">No bad ideas here.</p>
             <p className="mt-2 font-editorial text-lg text-ink/80">
               Even a one-line spark is enough to start. Send it.

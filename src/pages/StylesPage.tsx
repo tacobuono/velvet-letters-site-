@@ -56,25 +56,25 @@ export function StylesPage() {
   usePauseOffscreen(); // pause the looping exhibit animations when off-screen
 
   return (
-    <div ref={ref} className="bg-velvet-deep text-cream">
+    <div ref={ref} className="bg-pine-deep text-cream">
       <header className="mx-auto max-w-[1500px] px-6 pb-16 pt-32 text-center sm:px-10 sm:pt-44">
-        <p className="font-ui text-[0.7rem] uppercase tracking-[0.45em] text-gold" data-reveal>The Showroom</p>
+        <p className="font-grotesk text-[0.7rem] uppercase tracking-[0.45em] text-brass" data-reveal>The Showroom</p>
         <h1 className="mx-auto mt-6 max-w-4xl font-display text-[clamp(2.6rem,7vw,6rem)] font-black leading-[0.95]" data-reveal>
-          Eight website <span className="italic text-gold">worlds</span> you can step into.
+          Eight website <span className="italic text-brass">worlds</span> you can step into.
         </h1>
-        <p className="mx-auto mt-7 max-w-2xl font-editorial text-2xl leading-relaxed text-gold-light" data-reveal>
+        <p className="mx-auto mt-7 max-w-2xl font-editorial text-2xl leading-relaxed text-brass-bright" data-reveal>
           Every Velvet Letters site is custom — but it usually starts from one of these. Each is a
           purchasable world, engineered to make visitors feel a specific way and act.
         </p>
       </header>
 
       {/* Showroom — full-width alternating exhibits */}
-      <div className="border-t border-gold/12">
+      <div className="border-t border-brass/12">
         {STYLES.map((s, i) => (
           <article
             key={s.key}
             data-reveal={i % 2 === 1 ? 'right' : 'left'}
-            className={`mx-auto grid max-w-[1500px] items-center gap-10 border-b border-gold/12 px-6 py-16 sm:px-10 lg:grid-cols-2 ${
+            className={`mx-auto grid max-w-[1500px] items-center gap-10 border-b border-brass/12 px-6 py-16 sm:px-10 lg:grid-cols-2 ${
               i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''
             }`}
           >
@@ -87,7 +87,7 @@ export function StylesPage() {
 
             {/* Wall label */}
             <div>
-              <span className="font-ui text-[0.7rem] uppercase tracking-[0.35em] text-gold/80">
+              <span className="font-grotesk text-[0.7rem] uppercase tracking-[0.35em] text-brass/80">
                 World {String(i + 1).padStart(2, '0')}
               </span>
               <h2 className="mt-2 font-display text-[clamp(2rem,4vw,3.4rem)] font-bold leading-tight">{s.title}</h2>
@@ -95,22 +95,22 @@ export function StylesPage() {
 
               <dl className="mt-6 grid gap-4 sm:grid-cols-3">
                 <div>
-                  <dt className="font-ui text-[0.62rem] uppercase tracking-[0.2em] text-gold/80">Feels like</dt>
+                  <dt className="font-grotesk text-[0.62rem] uppercase tracking-[0.2em] text-brass/80">Feels like</dt>
                   <dd className="mt-1 font-editorial text-base text-cream/75">{s.feel}</dd>
                 </div>
                 <div>
-                  <dt className="font-ui text-[0.62rem] uppercase tracking-[0.2em] text-gold/80">Best for</dt>
+                  <dt className="font-grotesk text-[0.62rem] uppercase tracking-[0.2em] text-brass/80">Best for</dt>
                   <dd className="mt-1 font-editorial text-base text-cream/75">{s.fit}</dd>
                 </div>
                 <div>
-                  <dt className="font-ui text-[0.62rem] uppercase tracking-[0.2em] text-gold/80">Outcome</dt>
+                  <dt className="font-grotesk text-[0.62rem] uppercase tracking-[0.2em] text-brass/80">Outcome</dt>
                   <dd className="mt-1 font-editorial text-base text-cream/75">{s.outcome}</dd>
                 </div>
               </dl>
 
               <Link
                 to="/contact"
-                className="mt-7 inline-block rounded-full border border-gold px-7 py-3 font-ui text-[0.75rem] uppercase tracking-[0.2em] text-gold no-underline transition-colors hover:bg-gold hover:text-velvet-deep"
+                className="mt-7 inline-block rounded-full border border-brass px-7 py-3 font-grotesk text-[0.75rem] uppercase tracking-[0.2em] text-brass no-underline transition-colors hover:bg-brass hover:text-pine-deep"
               >
                 Build this world →
               </Link>
